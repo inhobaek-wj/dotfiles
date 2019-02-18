@@ -347,13 +347,19 @@ the same coding systems as Emacs."
 ;;; https://github.com/bbatsov/projectile
 (use-package projectile
   :ensure t
-  :delight '(:eval (concat " [" (projectile-project-name) "]"))
+;;  :delight '(:eval (concat " [" (projectile-project-name) "]"))
   :init
   (setq projectile-keymap-prefix (kbd "C-c p"))
   :config
   (projectile-mode)
-  (setq projectile-enable-caching t)
-  (setq projectile-indexing-method 'alien)
+  (setq projectile-enable-caching t
+        projectile-indexing-method 'alien
+        projectile-completion-system 'helm
+        projectile-switch-project-action 'helm-projectile)
+  ;; https://github.com/bbatsov/projectile/issues/1183
+  (setq projectile-mode-line
+        '(:eval (format " Projectile[%s]"
+                        (projectile-project-name))))
   (setq projectile-globally-ignored-file-suffixes
         '(".psd" ".png" ".fbx" ".anim" ".mat" ".meta" ".prefab" ".asset"
           ".controller")))
@@ -361,6 +367,8 @@ the same coding systems as Emacs."
 ;;; https://github.com/bbatsov/helm-projectile
 (use-package helm-projectile
   :ensure t
+  :commands (helm-projectile)
+  :after helm
   :config
   (helm-projectile-on)
 
@@ -385,13 +393,38 @@ the same coding systems as Emacs."
   :init
   (counsel-projectile-mode))
 
+
 (use-package company
   :ensure t
-  :init
-  (add-hook 'after-init-hook 'global-company-mode)
+  :diminish company-mode
+  :commands (company-complete company-mode)
+  :bind (([remap dabbrev-expand] . company-complete)
+         :map prog-mode-map
+         ([tab] . company-indent-or-complete-common))
+  :init (if (fboundp 'evil-declare-change-repeat)
+            (mapc #'evil-declare-change-repeat
+                  '(company-complete-common
+                    company-select-next
+                    company-select-previous
+                    company-complete-selection
+                    company-complete-number)))
+  ;; (add-hook 'after-init-hook 'global-company-mode)
   :config
+  (use-package company-statistics
+              :ensure t
+              :init
+              (company-statistics-mode))
   (setq company-idle-delay 0)
-  (setq company-show-numbers "on"))
+  (setq company-show-numbers "on")
+  (add-hook 'prog-mode-hook 'company-mode))
+
+;; (use-package company
+;;   :ensure t
+;;   :init
+;;   (add-hook 'after-init-hook 'global-company-mode)
+;;   :config
+;;   (setq company-idle-delay 0)
+;;   (setq company-show-numbers "on"))
 
 (use-package yasnippet :ensure t)
 
@@ -417,14 +450,12 @@ the same coding systems as Emacs."
 
 (use-package flycheck
   :ensure t
-  :init (global-flycheck-mode))
-
-;; (use-package flycheck-package
-;;   :ensure t
-;;   :init
-;;   :config
-;;   (flycheck-package-setup))
-
+  :diminish flycheck-mode
+  :commands flycheck-mode
+  :init (global-flycheck-mode)
+  :config
+  (setq flycheck-check-syntax-automatically '(save idle-change mode-enabled)
+        flycheck-idle-change-delay 5.0))
 
 ;;; Elpy, the Emacs Lisp Python Environment
 ;;; elpy https://github.com/jorgenschaefer/elpy
