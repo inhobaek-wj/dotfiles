@@ -347,7 +347,7 @@ the same coding systems as Emacs."
 ;;; https://github.com/bbatsov/projectile
 (use-package projectile
   :ensure t
-;;  :delight '(:eval (concat " [" (projectile-project-name) "]"))
+  :delight '(:eval (concat " [" (projectile-project-name) "]"))
   :init
   (setq projectile-keymap-prefix (kbd "C-c p"))
   :config
@@ -418,13 +418,6 @@ the same coding systems as Emacs."
   (setq company-show-numbers "on")
   (add-hook 'prog-mode-hook 'company-mode))
 
-;; (use-package company
-;;   :ensure t
-;;   :init
-;;   (add-hook 'after-init-hook 'global-company-mode)
-;;   :config
-;;   (setq company-idle-delay 0)
-;;   (setq company-show-numbers "on"))
 
 (use-package yasnippet :ensure t)
 
@@ -549,32 +542,20 @@ the same coding systems as Emacs."
 ;;; 아래 코드 돌리기 전에 해당 디렉토리 안에서
 ;;; git clone https://github.com/ternjs/tern
 ;;; npm install
-(add-to-list 'load-path "~/node_modules/tern/emacs/")
-(autoload 'tern-mode "tern.el" nil t)
-(add-hook 'js-mode-hook (lambda () (tern-mode t)))
-(eval-after-load 'tern
-   '(progn
-      (require 'tern-auto-complete)
-      (tern-ac-setup)))
+;; (add-to-list 'load-path "~/node_modules/tern/emacs/")
+;; (autoload 'tern-mode "tern.el" nil t)
+;; (add-hook 'js-mode-hook (lambda () (tern-mode t)))
+;; (eval-after-load 'tern
+;;    '(progn
+;;       (require 'tern-auto-complete)
+;;       (tern-ac-setup)))
 
 
-(use-package company-tern
-  :ensure t
-  :init
-  (add-to-list 'company-backends 'company-tern))
+;; (use-package company-tern
+;;   :ensure t
+;;   :init
+;;   (add-to-list 'company-backends 'company-tern))
 
-(use-package js-doc
-  :ensure t
-  :bind
-  (:map js2-mode-map
-        ("\C-cd" . js-doc-insert-function-doc)
-        ("@" . js-doc-insert-tag))
-  ;; :config
-  ;; (setq js-doc-mail-address "shirenbeat@gmail.com"
-  ;;     js-doc-author (format "Sungho Kim <%s>" js-doc-mail-address)
-  ;;     js-doc-url "shiren.github.io"
-  ;;     js-doc-license "MIT")
-)
 
 
 ;;;; Web
@@ -631,8 +612,8 @@ the same coding systems as Emacs."
 ;;   $ pacman -S mingw-w64-x86_64-poppler
 ;;   $ pacman -S mingw-w64-x86_64-imagemagick
 ;; 3.M-x pdf-tools-install RET
-(use-package pdf-tools
-  :ensure t
-  :init
-  (pdf-tools-install)
-  )
+;; (use-package pdf-tools
+;;   :ensure t
+;;   :init
+;;   (pdf-tools-install)
+;;   )
