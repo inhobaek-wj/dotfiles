@@ -8,31 +8,27 @@
 
 (defun available-font? (font) (member font (font-family-list)))
 
-;; startup-message 안 보기
+;;; startup-message 안 보기
 (setq inhibit-startup-message t)
-;; *scratch* 버퍼 깨끗하게 시작하기
+;;; *scratch* 버퍼 깨끗하게 시작하기
 ;;(setq initial-scratch-message nil)
-;; 선택 텍스트를 타이핑할 때, 삭제
+;;; 선택 텍스트를 타이핑할 때, 삭제
 (delete-selection-mode t)
-;; 라인 넘버 보기
-;; (global-linum-mode t)
-;; 컬럼 넘버 보기
-(setq column-number-mode t)
-;; word-wrap
+;;; word-wrap
 (global-visual-line-mode t)
-;; syntax highlighting on
+;;; syntax highlighting on
 (global-font-lock-mode t)
-;; 커서가 있는 라인 하이라이트
+;;; 커서가 있는 라인 하이라이트
 (global-hl-line-mode t)
 
 (global-auto-revert-mode 1)
 
-;; menu bar off
+;;; menu bar off
 (when (fboundp 'menu-bar-mode) (menu-bar-mode -1))
 (when (fboundp 'tool-bar-mode) (tool-bar-mode -1))
 (when (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 
-;;;; key bind.
+;;; key bind.
 ;; M-x == C-x/C-m
 (global-set-key "\C-x\C-m" 'execute-extended-command)
 (global-set-key "\C-c\C-m" 'execute-extended-command)
@@ -48,6 +44,7 @@
 
 (defalias 'yes-or-no-p 'y-or-n-p)
 (defalias 'sh 'shell)
+
 ;;; emacs-server
 (require 'server)
 (server-start)
@@ -57,13 +54,13 @@
 ;; |----------+---|
 ;; | 일이삼사 |   |
 (when mac?
-  ;; font
+  ;;; font
   (when (available-font? "Consolas")
     (set-frame-font "Consolas-15" nil t)
     (set-fontset-font t 'hangul (font-spec :name "PCMyungjo-16"))
     (setq-default line-spacing 2))
 
-  ;; keybinding
+  ;;; keybinding
   (setq mac-command-modifier 'meta)
   (setq mac-option-modifier 'super))
 
@@ -76,9 +73,15 @@
     (set-fontset-font t 'hangul (font-spec :name "Batangche"))
     (setq-default line-spacing 3)))
 
-;; 한글
+(when (available-font? "Consolas")
+  (set-frame-font "Consolas-13" nil t)
+  (set-fontset-font t 'hangul (font-spec :name "Batangche"))
+  (setq-default line-spacing 3))
+
+
+;;; 한글
 (set-language-environment "Korean")
-;; 날짜 표시를 영어로하려고
+;;; 날짜 표시를 영어로하려고
 (setq system-time-locale "C")
 
 
@@ -115,12 +118,12 @@ the same coding systems as Emacs."
 (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
 
 
-;;;; emacs가 init.el에 추가하는 설정 방지
+;;; emacs가 init.el에 추가하는 설정 방지
 ;;; (custom-set-variables ...
 ;;; https://jamiecollinson.com/blog/my-emacs-config/
 (setq custom-file (make-temp-file "emacs-custom"))
 
-;;;; packages
+;;; packages
 ;; (require 'package)
 ;; (add-to-list 'package-archives
 ;;              '("melpa" . "http://melpa.milkbox.net/packages/")
@@ -148,12 +151,12 @@ the same coding systems as Emacs."
   (package-refresh-contents)
   (package-install 'use-package))
 
-;;;; theme
-;; https://github.com/bbatsov/solarized-emacs
+;;; theme
+;;; https://github.com/bbatsov/solarized-emacs
 (use-package solarized-theme
   :ensure t
   :init
-  ;; org에서 커진 한글 폰트가 너무 안 예뻐서
+  ;;; org에서 커진 한글 폰트가 너무 안 예뻐서
   (setq solarized-height-minus-1 1.0)
   (setq solarized-height-plus-1 1.0)
   (setq solarized-height-plus-2 1.0)
@@ -178,7 +181,7 @@ the same coding systems as Emacs."
   :init
   :config)
 
-;;;; shell
+;;; shell
 (when windows?
   (let* ((combine-path (lambda (dir dir-or-file)
                          (concat (file-name-as-directory dir) dir-or-file)))
@@ -201,14 +204,14 @@ the same coding systems as Emacs."
     )
   )
 
-;;;; backup
+;;; backup
 (add-to-list 'backup-directory-alist '("." . "~/.emacs-saves"))
 (setq delete-old-versions t
       kept-old-versions 2
       kept-new-versions 2
       version-control t)
 
-;;;; whitespace mode
+;;; whitespace mode
 (global-whitespace-mode t)
 
 (custom-set-faces
@@ -236,15 +239,13 @@ the same coding systems as Emacs."
 ;;; disable tabs mode
 (setq-default indent-tabs-mode nil)
 
-;; (setq-default tab-width 2)
-
 
 ;;;; Emacs extend ;;;;
 
 (use-package delight
   :ensure t)
 
-;;;; Window
+;;; Window
 (use-package eyebrowse
   :ensure t
   :init
@@ -263,7 +264,7 @@ the same coding systems as Emacs."
 ;;(add-to-list 'sml/replacer-regexp-list '("^c:/work/" ":Dev:") t)
 
 
-;;;; helm
+;;; helm
 ;;; https://github.com/emacs-helm/helm
 (use-package helm
   :ensure t
@@ -343,7 +344,7 @@ the same coding systems as Emacs."
    ("M-m" . helm-multi-swoop-current-mode-from-helm-swoop)))
 
 
-;;;; projectile
+;;; projectile
 ;;; https://github.com/bbatsov/projectile
 (use-package projectile
   :ensure t
@@ -464,7 +465,7 @@ the same coding systems as Emacs."
   )
 
 
-;;;; javascript
+;;; javascript
 ;; (setq js-indent-level 4)
 
 ;; (defun eslint-fix ()
@@ -521,45 +522,25 @@ the same coding systems as Emacs."
 
 
 
-;; (use-package tern
-;;   :ensure t
-;;   :init
-;;   (autoload 'tern-mode' "tern.el" nil t)
-;;   (add-hook 'js2-mode-hook (lambda () (tern-mode t)))
-;;   ;; (add-hook 'rjsx-mode-hook (lambda () (tern-mode t)))
-;;   ;; :config
-;;   ;; (define-key tern-mode-keymap (kbd "C-c C-r") nil)
-;;   ;; ;; (define-key tern-mode-keymap (kbd "M-.") nil)
-;;   ;; ;; (define-key tern-mode-keymap (kbd "M-,") nil)
-;;   ;; (setq tern-command '("tern" "--no-port-file"))
-;;   )
-
-;; (use-package tern-auto-complete
-;;   :ensure t
-;;   :init)
-
-;;; 위에 use-package 를 사용해서 package를 설치하고
-;;; 아래 코드로 돌리니까 auto completion 이 되기 시작.
-;;; 아래 코드 돌리기 전에 해당 디렉토리 안에서
 ;;; git clone https://github.com/ternjs/tern
 ;;; npm install
-;; (add-to-list 'load-path "~/node_modules/tern/emacs/")
-;; (autoload 'tern-mode "tern.el" nil t)
-;; (add-hook 'js-mode-hook (lambda () (tern-mode t)))
-;; (eval-after-load 'tern
-;;    '(progn
-;;       (require 'tern-auto-complete)
-;;       (tern-ac-setup)))
+(add-to-list 'load-path "~/.emacs.d/elpa/tern/emacs/")
+(autoload 'tern-mode "tern.el" nil t)
+(add-hook 'js-mode-hook (lambda () (tern-mode t)))
+(eval-after-load 'tern
+   '(progn
+      (require 'tern-auto-complete)
+      (tern-ac-setup)))
+
+;;; First, install tern with above code.
+(use-package company-tern
+  :ensure t
+  :init
+  (add-to-list 'company-backends 'company-tern))
 
 
-;; (use-package company-tern
-;;   :ensure t
-;;   :init
-;;   (add-to-list 'company-backends 'company-tern))
 
-
-
-;;;; Web
+;;; Web
 (use-package web-mode
   :ensure t
   :init
@@ -574,7 +555,7 @@ the same coding systems as Emacs."
   (add-to-list 'auto-mode-alist '("\\.css\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.jsp\\'" . web-mode)))
 
-;;;; java
+;;; java
 (use-package meghanada
   :ensure t
   :init
@@ -597,22 +578,13 @@ the same coding systems as Emacs."
    (setq meghanada-maven-path "mvn"))))
 
 
-;;;; clojure
+;;; clojure
 (use-package cider
   :ensure t)
 
 
-;;;; pdf-tools
-;; 1.Open msys2 shell
-;; 2.Update and install dependencies, skipping any you already have
-;;   $ pacman -Syu
-;;   $ pacman -S base-devel
-;;   $ pacman -S mingw-w64-x86_64-toolchain
-;;   $ pacman -S mingw-w64-x86_64-zlib
-;;   $ pacman -S mingw-w64-x86_64-libpng
-;;   $ pacman -S mingw-w64-x86_64-poppler
-;;   $ pacman -S mingw-w64-x86_64-imagemagick
-;; 3.M-x pdf-tools-install RET
+;;; pdf-tools
+;;; https://github.com/politza/pdf-tools
 (use-package pdf-tools
   :ensure t
   :init
