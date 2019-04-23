@@ -236,7 +236,7 @@ the same coding systems as Emacs."
 ;;; disable tabs mode
 (setq-default indent-tabs-mode nil)
 
-
+;; (setq-default tab-width 2)
 
 
 ;;;; Emacs extend ;;;;
@@ -398,7 +398,8 @@ the same coding systems as Emacs."
   :ensure t
   :diminish company-mode
   :commands (company-complete company-mode)
-  :bind (([remap dabbrev-expand] . company-complete)
+  :bind (
+         ;; ([remap dabbrev-expand] . company-complete)
          :map prog-mode-map
          ([tab] . company-indent-or-complete-common))
   :init (if (fboundp 'evil-declare-change-repeat)
@@ -408,7 +409,7 @@ the same coding systems as Emacs."
                     company-select-previous
                     company-complete-selection
                     company-complete-number)))
-  ;; (add-hook 'after-init-hook 'global-company-mode)
+  (add-hook 'after-init-hook 'global-company-mode)
   :config
   (use-package company-statistics
               :ensure t
@@ -583,7 +584,7 @@ the same coding systems as Emacs."
               (meghanada-mode t)
               ;; (flycheck-mode +1)
               (flycheck-mode t)
-              ;; (setq c-basic-offset 2)
+              (setq c-basic-offset 2)
               ;;; use code format
               ;; (add-hook 'before-save-hook 'meghanada-code-beautify-before-save)
               ))
@@ -612,8 +613,8 @@ the same coding systems as Emacs."
 ;;   $ pacman -S mingw-w64-x86_64-poppler
 ;;   $ pacman -S mingw-w64-x86_64-imagemagick
 ;; 3.M-x pdf-tools-install RET
-;; (use-package pdf-tools
-;;   :ensure t
-;;   :init
-;;   (pdf-tools-install)
-;;   )
+(use-package pdf-tools
+  :ensure t
+  :init
+  (pdf-tools-install)
+  )
