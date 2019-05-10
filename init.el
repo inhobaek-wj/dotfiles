@@ -399,8 +399,7 @@ the same coding systems as Emacs."
   :ensure t
   :diminish company-mode
   :commands (company-complete company-mode)
-  :bind (
-         ;; ([remap dabbrev-expand] . company-complete)
+  :bind ( ;;([remap dabbrev-expand] . company-complete)
          :map prog-mode-map
          ([tab] . company-indent-or-complete-common))
   :init (if (fboundp 'evil-declare-change-repeat)
@@ -466,7 +465,7 @@ the same coding systems as Emacs."
 
 
 ;;; javascript
-;; (setq js-indent-level 4)
+(setq js-indent-level 2)
 
 ;; (defun eslint-fix ()
 ;;   "Format the current file with ESLint."
@@ -531,6 +530,10 @@ the same coding systems as Emacs."
    '(progn
       (require 'tern-auto-complete)
       (tern-ac-setup)))
+
+(use-package tern-auto-complete
+  :ensure t
+  :init)
 
 ;;; First, install tern with above code.
 (use-package company-tern
