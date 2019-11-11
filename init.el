@@ -124,26 +124,19 @@ the same coding systems as Emacs."
 (setq custom-file (make-temp-file "emacs-custom"))
 
 ;;; packages
-;; (require 'package)
-;; (add-to-list 'package-archives
-;;              '("melpa" . "http://melpa.milkbox.net/packages/")
-;;              t)
-;; (add-to-list 'package-archives
-;;              '("org" . "http://orgmode.org/elpa/")
-;;              t)
-
 ;;; Set up package
 (require 'package)
 (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/") t)
 ; (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/") t)
 (add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
-;; (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (add-to-list 'package-archives
-             '("melpa" . "http://melpa.milkbox.net/packages/")
+             '("melpa-milkbox" . "http://melpa.milkbox.net/packages/")
              t)
 (add-to-list 'package-archives
              '("org" . "http://orgmode.org/elpa/")
              t)
+(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
+
 
 
 (package-initialize)
@@ -559,26 +552,65 @@ the same coding systems as Emacs."
   (add-to-list 'auto-mode-alist '("\\.jsp\\'" . web-mode)))
 
 ;;; java
-(use-package meghanada
-  :ensure t
+;; lsp-java
+(require 'cc-mode)
+
+(condition-case nil
+    (require 'use-package)
+  (file-error
+   (require 'package)
+   (package-initialize)
+   (package-refresh-contents)
+   (package-install 'use-package)
+   (require 'use-package)))
+
+(use-package projectile :ensure t)
+(use-package yasnippet :ensure t)
+(use-package lsp-mode
   :init
-  (add-hook 'java-mode-hook
-            (lambda ()
-              ;; meghanada-mode on
-              (meghanada-mode t)
-              ;; (flycheck-mode +1)
-              (flycheck-mode t)
-              (setq c-basic-offset 2)
-              ;;; use code format
-              ;; (add-hook 'before-save-hook 'meghanada-code-beautify-before-save)
-              ))
+  (setq lsp-prefer-flymake nil)
+  :ensure t
+)
+(use-package hydra :ensure t)
+(use-package company-lsp :ensure t)
+(use-package lsp-ui
   :config
-  (when windows?
-   (setq meghanada-java-path (expand-file-name "bin/java.exe" (getenv "JAVA_HOME")))
-   (setq meghanada-maven-path "mvn.cmd")
-  (unless
-   (setq meghanada-java-path "java")
-   (setq meghanada-maven-path "mvn"))))
+  (setq lsp-ui-doc-enable t
+        lsp-ui-sideline-enable t
+        lsp-ui-flycheck-enable t)
+  :after lsp-mode)
+(use-package lsp-java :ensure t :after lsp
+  :config (add-hook 'java-mode-hook 'lsp))
+(use-package dap-mode
+  :ensure t :after lsp-mode
+  :config
+  (dap-mode t)
+  (dap-ui-mode t))
+(use-package dap-java :after (lsp-java))
+
+(require 'lsp-java-boot)
+(add-hook 'lsp-mode-hook 'lsp-ui-mode)
+
+(setq lsp-java-vmargs
+      (list
+       "-noverify"
+       "-Xmx1G"
+       "-XX:+UseG1GC"
+       "-XX:+UseStringDeduplication"
+       "-javaagent:/home/jake/.m2/repository/org/projectlombok/lombok/1.18.10/lombok-1.18.10.jar"
+       "-Xbootclasspath/a:/home/jake/.m2/repository/org/projectlombok/lombok/1.18.10/lombok-1.18.10.jar"
+       ))
+;; (setq lsp-ui-sideline-update-mode 'point)
+
+;; to enable the lenses
+(add-hook 'lsp-mode-hook #'lsp-lens-mode)
+(add-hook 'java-mode-hook #'lsp-java-boot-lens-mode)
+(add-hook 'java-mode-hook 'flycheck-mode)
+
+;; key
+(require 'lsp-ui)
+(define-key lsp-ui-mode-map (kbd "C-c C-l") 'lsp-ui-sideline-apply-code-actions)
+(define-key lsp-ui-mode-map (kbd "C-c C-i") 'lsp-ui-find-workspace-symbol)
 
 
 ;;; clojure
@@ -587,7 +619,7 @@ the same coding systems as Emacs."
 
 
 ;;; pdf-tools
-;;; https://github.com/politza/pdf-tools
+;; https://github.com/politza/pdf-tools
 (use-package pdf-tools
   :ensure t
   :init
