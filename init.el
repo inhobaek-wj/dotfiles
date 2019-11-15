@@ -3,83 +3,91 @@
   (message (format "load local init el - %s" local-init-el-path))
   (load-file local-init-el-path))
 
-(setq windows? (eq system-type 'windows-nt))
-(setq mac? (eq system-type 'darwin))
-
 (defun available-font? (font) (member font (font-family-list)))
 
-;;; startup-message 안 보기
+;; startup-message 안 보기
 (setq inhibit-startup-message t)
-;;; *scratch* 버퍼 깨끗하게 시작하기
+;; *scratch* 버퍼 깨끗하게 시작하기
 ;;(setq initial-scratch-message nil)
-;;; 선택 텍스트를 타이핑할 때, 삭제
+;; 선택 텍스트를 타이핑할 때, 삭제
 (delete-selection-mode t)
-;;; word-wrap
+;; word-wrap
 (global-visual-line-mode t)
-;;; syntax highlighting on
+;; syntax highlighting on
 (global-font-lock-mode t)
-;;; 커서가 있는 라인 하이라이트
+;; 커서가 있는 라인 하이라이트
 (global-hl-line-mode t)
+;; turn on line number
+(global-linum-mode t)
 
 (global-auto-revert-mode 1)
 
-;;; menu bar off
+;; menu bar off
 (when (fboundp 'menu-bar-mode) (menu-bar-mode -1))
 (when (fboundp 'tool-bar-mode) (tool-bar-mode -1))
 (when (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 
-;;; key bind.
+;; key bind.
 ;; M-x == C-x/C-m
 (global-set-key "\C-x\C-m" 'execute-extended-command)
 (global-set-key "\C-c\C-m" 'execute-extended-command)
 
-;;; ibuffer-mode
+;; ibuffer-mode
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 
 (global-set-key "\C-w" 'backward-kill-word)
 (global-set-key "\C-x\C-k" 'kill-region)
 (global-set-key "\C-c\C-k" 'kill-region)
 
+(global-set-key (kbd "M-p") 'backward-paragraph)
+(global-set-key (kbd "M-n") 'forward-paragraph)
+
+;; Use M-w for copy-line if no active region
+(global-set-key (kbd "M-w") 'save-region-or-current-line)
+(global-set-key (kbd "M-W") 'copy-whole-lines)
+
+;; copy region if active
+;; otherwise copy to end of current line
+;;   * with prefix, copy N whole lines
+
+(defun copy-to-end-of-line ()
+  (interactive)
+  (kill-ring-save (point)
+                  (line-end-position))
+  (message "Copied to end of line"))
+
+(defun copy-whole-lines (arg)
+  "Copy ARG lines to the kill ring"
+  (interactive "p")
+  (kill-ring-save (line-beginning-position)
+                  (line-beginning-position (+ 1 arg)))
+  (message "%d line%s copied" arg (if (= 1 arg) "" "s")))
+
+(defun copy-line (arg)
+  "Copy to end of line, or ARG lines."
+  (interactive "P")
+  (if (null arg)
+      (copy-to-end-of-line)
+    (copy-whole-lines (prefix-numeric-value arg))))
+
+(defun save-region-or-current-line (arg)
+  (interactive "P")
+  (if (region-active-p)
+      (kill-ring-save (region-beginning) (region-end))
+(copy-line arg)))
+
+
 ;; (global-set-key (kbd "M-o") 'ace-window)
 
 (defalias 'yes-or-no-p 'y-or-n-p)
 (defalias 'sh 'shell)
 
-;;; emacs-server
+;; emacs-server
 (require 'server)
 (server-start)
 
 
-;; | 12345678 |   |
-;; |----------+---|
-;; | 일이삼사 |   |
-(when mac?
-  ;;; font
-  (when (available-font? "Consolas")
-    (set-frame-font "Consolas-15" nil t)
-    (set-fontset-font t 'hangul (font-spec :name "PCMyungjo-16"))
-    (setq-default line-spacing 2))
-
-  ;;; keybinding
-  (setq mac-command-modifier 'meta)
-  (setq mac-option-modifier 'super))
-
-;; | 12345678 |   |
-;; |----------+---|
-;; | 일이삼사 |   |
-(when windows?
-  (when (available-font? "Consolas")
-    (set-frame-font "Consolas-13" nil t)
-    (set-fontset-font t 'hangul (font-spec :name "Batangche"))
-    (setq-default line-spacing 3)))
-
-(when (available-font? "Consolas")
-  (set-frame-font "Consolas-13" nil t)
-  (set-fontset-font t 'hangul (font-spec :name "Batangche"))
-  (setq-default line-spacing 3))
-
-
-;;; 한글
+;; 한글
 (set-language-environment "Korean")
 ;;; 날짜 표시를 영어로하려고
 (setq system-time-locale "C")
@@ -123,29 +131,23 @@ the same coding systems as Emacs."
 ;;; https://jamiecollinson.com/blog/my-emacs-config/
 (setq custom-file (make-temp-file "emacs-custom"))
 
-;;; packages
-;;; Set up package
+;; packages
+;; Set up package
 (require 'package)
 (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/") t)
-; (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/") t)
+                                        ;(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/") t)
 (add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
-(add-to-list 'package-archives
-             '("melpa-milkbox" . "http://melpa.milkbox.net/packages/")
-             t)
-(add-to-list 'package-archives
-             '("org" . "http://orgmode.org/elpa/")
-             t)
+(add-to-list 'package-archives '("melpa-milkbox" . "http://melpa.milkbox.net/packages/") t)
+(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
-
-
 
 (package-initialize)
 (when (not (package-installed-p 'use-package))
   (package-refresh-contents)
   (package-install 'use-package))
 
-;;; theme
-;;; https://github.com/bbatsov/solarized-emacs
+;; theme
+;; https://github.com/bbatsov/solarized-emacs
 (use-package solarized-theme
   :ensure t
   :init
@@ -174,30 +176,7 @@ the same coding systems as Emacs."
   :init
   :config)
 
-;;; shell
-(when windows?
-  (let* ((combine-path (lambda (dir dir-or-file)
-                         (concat (file-name-as-directory dir) dir-or-file)))
-         ;; (base-dir "C:/git-sdk-64")
-         (base-dir "c:/msys64")
-         (mingw64-bin-dir (funcall combine-path base-dir "mingw64/bin"))
-         (msys2-bin-dir (funcall combine-path base-dir "usr/bin"))
-         (bash-path (funcall combine-path msys2-bin-dir "bash.exe")))
-    (add-to-list 'exec-path msys2-bin-dir)
-    (add-to-list 'exec-path mingw64-bin-dir)
-    (setq explicit-shell-file-name bash-path)
-    ;; (setq shell-file-name bash-path)
-    (setq shell-file-name "bash")
-    (setq explicit-bash.exe-args '("--noediting" "--login" "-i"))
-    (setenv "SHELL" bash-path)
-    (setenv "PATH" (concat mingw64-bin-dir path-separator
-                           (concat msys2-bin-dir path-separator
-                                   (getenv "PATH"))))
-    (add-hook 'comint-output-filter-functions 'comint-strip-ctrl-m)
-    )
-  )
-
-;;; backup
+;; backup
 (add-to-list 'backup-directory-alist '("." . "~/.emacs-saves"))
 (setq delete-old-versions t
       kept-old-versions 2
@@ -219,17 +198,52 @@ the same coding systems as Emacs."
 (add-hook
  'after-change-major-mode-hook
  '(lambda ()
-    (if (derived-mode-p 'prog-mode)
-        (setq whitespace-line-column
-              100
-              whitespace-style
-              '(face tabs trailing lines-tail tab-mark)))))
-        ;; (setq whitespace-line-column
-        ;;       nil
-        ;;       whitespace-style
-        ;;       '(face tabs trailing tab-mark)))))
+    (setq whitespace-line-column nil
+          whitespace-style '(face tabs trailing lines-tail tab-mark))))
 
-;;; disable tabs mode
+;; (add-hook 'before-save-hook 'cleanup-buffer)
+
+(global-set-key (kbd "C-c n") 'cleanup-buffer)
+
+(defun untabify-buffer ()
+  (interactive)
+  (untabify (point-min) (point-max)))
+
+(defun tabify-buffer ()
+  (interactive)
+  (tabify (point-min) (point-max)))
+
+(defun indent-buffer ()
+  (interactive)
+  (indent-region (point-min) (point-max)))
+
+(defun cleanup-buffer-safe ()
+  "Perform a bunch of safe operations on the whitespace content of a buffer.
+Does not indent buffer, because it is used for a before-save-hook, and that
+might be bad."
+  (interactive)
+  (untabify-buffer)
+  (delete-trailing-whitespace)
+  (set-buffer-file-coding-system 'utf-8))
+
+(defun cleanup-buffer ()
+  "Perform a bunch of operations on the whitespace content of a buffer.
+Including indent-buffer, which should not be called automatically on save."
+  (interactive)
+  (cleanup-buffer-safe)
+  (indent-buffer))
+
+;; (add-hook
+;;  'after-change-major-mode-hook
+;;  '(lambda ()
+;;     (if (derived-mode-p 'prog-mode)
+;;         (setq whitespace-line-column
+;;               100
+;;               whitespace-style
+;;               '(face tabs trailing lines-tail tab-mark)))))
+
+
+;; disable tabs mode
 (setq-default indent-tabs-mode nil)
 
 
@@ -248,14 +262,12 @@ the same coding systems as Emacs."
 ;;   :ensure t
 ;;   :config)
 
-
 ;;;smart-mode-line
 ;;(setq sml/no-confirm-load-theme t)
 ;;(setq sml/show-eol t) ;; show end-of-line. ex) CRLF(dos)
 ;;(setq sml/theme 'respectful)
 ;;(sml/setup)
 ;;(add-to-list 'sml/replacer-regexp-list '("^c:/work/" ":Dev:") t)
-
 
 ;;; helm
 ;;; https://github.com/emacs-helm/helm
@@ -292,36 +304,7 @@ the same coding systems as Emacs."
 (use-package helm-ag
   :ensure t
   :config
-
-  ;; windows에서만 문제가 발생
-  (when windows?
-    ;; mingw64/mingw-w64-x86_64-ag 2.0.0.r1912.ccdbe93-1 사용시
-    ;; 한글 검색이 안 된다. grep, rip 모두 잘 되는 걸로 봐서는 패키지를 의심
-    ;; helm-ag 패키지로도 사용할 수 있는 ripgrep을 사용한다.
-    ;; https://github.com/BurntSushi/ripgrep
-    ;; macOS에서도 ag 대신 ripgrep을 사용할지는 고민 중.
-    (setq helm-ag-base-command "rg -i --no-heading --vimgrep")
-
-    ;; helm-do-ag 처럼 process로 한글 인자를 넘길 때, encoding 문제를 해결하기 위해
-    ;; 내부 동작을 정확히 파악하지 못했다.
-    ;;
-    ;; cp949일 때
-    ;; - (korean-iso-8bit-dos . korean-iso-8bit-unix)
-    ;; - 출력은 깨지지만 입력은 process로 제대로 전달된다.
-    ;; utf-8일 때
-    ;; - (utf-8-dos . utf-8-unix)
-    ;; - 입력은 깨지지만 출력은 제대로 된다.
-    ;;
-    ;; 둘을 조합했다.
-    ;; 다른 건 utf-8로 잘 동작하니 helm-do-ag 실행할 때만 프로세스 인코딩을 변경한다
-    (advice-add 'helm-do-ag
-                :before (lambda (&rest _)
-                          (setq default-process-coding-system
-                                '(utf-8-dos . korean-iso-8bit-unix))))
-    (advice-add 'helm-do-ag
-                :after (lambda (&rest _)
-                         (setq default-process-coding-system
-                               '(utf-8-dos . utf-8-unix))))))
+  )
 
 ;;; https://github.com/ShingoFukuyama/helm-swoop
 (use-package helm-swoop
@@ -365,18 +348,7 @@ the same coding systems as Emacs."
   :after helm
   :config
   (helm-projectile-on)
-
-  ;; windows에서는 ag대신 ripgrep을 사용.
-  ;; --ignore 옵션이 하드코딩돼서 ripgrep을 사용 못함
-  ;; projectile 0.14.0
-  (when windows?
-    (advice-add 'helm-do-ag
-                :before (lambda (&rest _)
-                          (setq helm-ag-base-command
-                                (replace-regexp-in-string
-                                 "--ignore.*"
-                                 ""
-                                 helm-ag-base-command))))))
+  )
 
 
 (use-package counsel
@@ -405,15 +377,13 @@ the same coding systems as Emacs."
   (add-hook 'after-init-hook 'global-company-mode)
   :config
   (use-package company-statistics
-              :ensure t
-              :init
-              (company-statistics-mode))
+    :ensure t
+    :init
+    (company-statistics-mode))
   (setq company-idle-delay 0)
   (setq company-show-numbers "on")
   (add-hook 'prog-mode-hook 'company-mode))
 
-
-(use-package yasnippet :ensure t)
 
 (use-package org
   :pin org
@@ -459,70 +429,15 @@ the same coding systems as Emacs."
 
 ;;; javascript
 (setq js-indent-level 2)
-
-;; (defun eslint-fix ()
-;;   "Format the current file with ESLint."
-;;   (interactive)
-;;   (let ((eslint (or (shiren/use-eslint-from-node-modules) (executable-find "eslint"))))
-;;     (if (file-executable-p eslint)
-;;         (progn (call-process eslint nil "*ESLint Errors*" nil "--rule" "no-debugger:0" "--fix" buffer-file-name)
-;;                (revert-buffer t t t))
-;;       (message "ESLint not found."))))
-
-;; (use-package js2-mode
-;;   :ensure t
-;;   :init
-;;   (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
-;;   (add-to-list 'auto-mode-alist '("\\.es6\\'" . js2-mode))
-;;   (add-hook 'js2-mode-hook
-;;           '(lambda ()
-;;              (js2-imenu-extras-mode)))
-;;   :config
-;;   (define-key js2-mode-map (kbd "M-.") nil)
-;;   (define-key js2-mode-map (kbd "C-c C-j") nil)
-;;   (setq js2-include-node-externs t)
-;;   (setq js2-pretty-multiline-declarations nil)
-;;   (add-hook 'js2-mode-hook (lambda ()
-;;                              ;;(add-hook 'after-save-hook 'eslint-fix nil t)
-;;                              (setq tab-width 2)
-;;                              (setq-default js2-basic-offset 2)
-;;                              (js2-imenu-extras-mode)))
-;;   (setq-default js2-basic-offset 2
-;;                 js1-bounce-indent-p nil)
-;;   (setq-default js2-mode-show-parse-errors nil
-;;                 js2-mode-show-strict-warnings nil))
-
-;; (use-package lsp-javascript-typescript
-;;   :ensure-system-package
-;;   (javascript-typescript-langserver . "npm i -g javascript-typescript-langserver")
-;;   :ensure t
-;;   :init
-;;   (defun my-company-transformer (candidates)
-;;     (let ((completion-ignore-case t))
-;;       (all-completions (company-grab-symbol) candidates)))
-
-;;   (defun my-js-hook nil
-;;     (make-local-variable 'company-transformers)
-;;     (push 'my-company-transformer company-transformers))
-
-;;   (add-hook 'js-mode-hook #'lsp-javascript-typescript-enable)
-;;   (add-hook 'js-mode-hook 'my-js-hook)
-;;   (add-hook 'js2-mode-hook #'lsp-javascript-typescript-enable)
-;;   (add-hook 'js2-mode-hook 'my-js-hook)
-;;   (add-hook 'rjsx-mode-hook #'lsp-javascript-typescript-enable)
-;;   (add-hook 'rjsx-mode-hook 'my-js-hook))
-
-
-
 ;;; git clone https://github.com/ternjs/tern
 ;;; npm install
 (add-to-list 'load-path "~/.emacs.d/elpa/tern/emacs/")
 (autoload 'tern-mode "tern.el" nil t)
 (add-hook 'js-mode-hook (lambda () (tern-mode t)))
 (eval-after-load 'tern
-   '(progn
-      (require 'tern-auto-complete)
-      (tern-ac-setup)))
+  '(progn
+     (require 'tern-auto-complete)
+     (tern-ac-setup)))
 
 (use-package tern-auto-complete
   :ensure t
@@ -534,17 +449,15 @@ the same coding systems as Emacs."
   :init
   (add-to-list 'company-backends 'company-tern))
 
-
-
 ;;; Web
 (use-package web-mode
   :ensure t
   :init
-  ;; (defun my-web-mode-hook ()
-  ;;   "Hooks for Web mode."
-  ;;   (setq web-mode-markup-indent-offset 2)
-  ;;   (setq web-mode-code-indent-offset 2)
-  ;;   (setq web-mode-css-indent-offset 2))
+  (defun my-web-mode-hook ()
+    "Hooks for Web mode."
+    (setq web-mode-markup-indent-offset 2)
+    (setq web-mode-code-indent-offset 2)
+    (setq web-mode-css-indent-offset 2))
 
   (add-hook 'web-mode-hook  'my-web-mode-hook)
   (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
@@ -570,7 +483,7 @@ the same coding systems as Emacs."
   :init
   (setq lsp-prefer-flymake nil)
   :ensure t
-)
+  )
 (use-package hydra :ensure t)
 (use-package company-lsp :ensure t)
 (use-package lsp-ui
@@ -579,8 +492,13 @@ the same coding systems as Emacs."
         lsp-ui-sideline-enable t
         lsp-ui-flycheck-enable t)
   :after lsp-mode)
-(use-package lsp-java :ensure t :after lsp
-  :config (add-hook 'java-mode-hook 'lsp))
+(use-package lsp-java
+  :ensure t
+  :after lsp
+  :config
+  (add-hook 'java-mode-hook 'lsp)
+  )
+
 (use-package dap-mode
   :ensure t :after lsp-mode
   :config
@@ -601,22 +519,22 @@ the same coding systems as Emacs."
        "-Xbootclasspath/a:/home/jake/.m2/repository/org/projectlombok/lombok/1.18.10/lombok-1.18.10.jar"
        ))
 ;; (setq lsp-ui-sideline-update-mode 'point)
+(setq lsp-enable-on-type-formatting nil)
 
 ;; to enable the lenses
 (add-hook 'lsp-mode-hook #'lsp-lens-mode)
 (add-hook 'java-mode-hook #'lsp-java-boot-lens-mode)
 (add-hook 'java-mode-hook 'flycheck-mode)
 
-;; key
+
+;; key binding
 (require 'lsp-ui)
 (define-key lsp-ui-mode-map (kbd "C-c C-l") 'lsp-ui-sideline-apply-code-actions)
 (define-key lsp-ui-mode-map (kbd "C-c C-i") 'lsp-ui-find-workspace-symbol)
 
-
 ;;; clojure
 (use-package cider
   :ensure t)
-
 
 ;;; pdf-tools
 ;; https://github.com/politza/pdf-tools
@@ -624,4 +542,11 @@ the same coding systems as Emacs."
   :ensure t
   :init
   (pdf-tools-install)
+  )
+
+;;; https://github.com/ralesi/ranger.el
+(use-package ranger
+  :ensure t
+  :config
+  (ranger-override-dired-mode t)
   )
