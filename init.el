@@ -22,6 +22,11 @@
 
 (global-auto-revert-mode 1)
 
+
+(defalias 'yes-or-no-p 'y-or-n-p)
+(defalias 'sh 'shell)
+
+
 ;; menu bar off
 (when (fboundp 'menu-bar-mode) (menu-bar-mode -1))
 (when (fboundp 'tool-bar-mode) (tool-bar-mode -1))
@@ -74,13 +79,28 @@
   (interactive "P")
   (if (region-active-p)
       (kill-ring-save (region-beginning) (region-end))
-(copy-line arg)))
+    (copy-line arg)))
+
+;; comment without region
+(global-set-key (kbd "M-;") 'comment-dwim-line)
+
+(defun comment-dwim-line (&optional arg)
+  "Replacement for the comment-dwim command.
+   If no region is selected and current line is not blank and we
+   are not at the end of the line, then comment current line.
+   Replaces default behaviour of comment-dwim, when it inserts
+   comment at the end of the line."
+  (interactive "*P")
+  (comment-normalize-vars)
+  (if (not (region-active-p))
+      (comment-or-uncomment-region
+       (line-beginning-position) (line-end-position))
+    (comment-dwim arg)))
+
 
 
 ;; (global-set-key (kbd "M-o") 'ace-window)
 
-(defalias 'yes-or-no-p 'y-or-n-p)
-(defalias 'sh 'shell)
 
 ;; emacs-server
 (require 'server)
@@ -548,5 +568,5 @@ Including indent-buffer, which should not be called automatically on save."
 (use-package ranger
   :ensure t
   :config
-  (ranger-override-dired-mode t)
+  ;; (ranger-override-dired-mode t)
   )
