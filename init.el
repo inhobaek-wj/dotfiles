@@ -507,6 +507,7 @@ Including indent-buffer, which should not be called automatically on save."
 (use-package hydra :ensure t)
 (use-package company-lsp :ensure t)
 (use-package lsp-ui
+  :ensure t
   :config
   (setq lsp-ui-doc-enable t
         lsp-ui-sideline-enable t
