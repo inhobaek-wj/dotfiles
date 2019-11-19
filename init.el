@@ -447,8 +447,17 @@ Including indent-buffer, which should not be called automatically on save."
   )
 
 
-;;; javascript
+;;;; javascript
 (setq js-indent-level 2)
+
+;;; https://github.com/mooz/js2-mode
+(use-package js2-mode
+  :ensure t
+  :config
+  (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+  ;; Better imenu
+(add-hook 'js2-mode-hook #'js2-imenu-extras-mode))
+
 ;;; git clone https://github.com/ternjs/tern
 ;;; npm install
 (add-to-list 'load-path "~/.emacs.d/elpa/tern/emacs/")
@@ -468,6 +477,10 @@ Including indent-buffer, which should not be called automatically on save."
   :ensure t
   :init
   (add-to-list 'company-backends 'company-tern))
+
+(add-hook 'js2-mode-hook (lambda ()
+                           (tern-mode)
+                           (company-mode)))
 
 ;;; Web
 (use-package web-mode
