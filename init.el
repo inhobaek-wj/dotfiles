@@ -460,6 +460,7 @@ Including indent-buffer, which should not be called automatically on save."
 ;;; Install indium. If indium is not working, check sudo npm install -g indium
 (unless (package-installed-p 'indium)
   (package-install 'indium))
+(setq indium-chrome-executable "chrome")
 
 
 ;;; Web
@@ -540,13 +541,12 @@ Including indent-buffer, which should not be called automatically on save."
             (dap-mode t)
             (dap-ui-mode t))
           (use-package dap-java
-            :ensure t
             :after (lsp-java)
             )
          )
   :config
   (add-hook 'java-mode-hook 'lsp)
-  ;; (require 'lsp-java-boot) ??
+  (require 'lsp-java-boot)
   (add-hook 'lsp-mode-hook 'lsp-ui-mode)
   ;; to enable the lenses
   (add-hook 'lsp-mode-hook #'lsp-lens-mode)
