@@ -390,8 +390,8 @@ Including indent-buffer, which should not be called automatically on save."
            :config
            (helm-projectile-on)
            )
-        )
-)
+         )
+  )
 
 (use-package company
   :ensure t
@@ -418,6 +418,13 @@ Including indent-buffer, which should not be called automatically on save."
   (add-hook 'prog-mode-hook 'company-mode))
 
 
+(use-package magit
+  :ensure t
+  ;; :config
+  ;; (setq magit-git-executable "/usr/libexec/git-core")
+  :bind ("C-x g" . magit-status)
+  )
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; programing language
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -441,7 +448,7 @@ Including indent-buffer, which should not be called automatically on save."
   :config
   (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
   ;; Better imenu
-(add-hook 'js2-mode-hook #'js2-imenu-extras-mode))
+  (add-hook 'js2-mode-hook #'js2-imenu-extras-mode))
 
 ;;; git clone https://github.com/ternjs/tern
 ;;; npm install
@@ -543,7 +550,7 @@ Including indent-buffer, which should not be called automatically on save."
           (use-package dap-java
             :after (lsp-java)
             )
-         )
+          )
   :config
   (add-hook 'java-mode-hook 'lsp)
   (require 'lsp-java-boot)
@@ -582,7 +589,7 @@ Including indent-buffer, which should not be called automatically on save."
 
 (use-package yaml-mode
   :ensure t
-:mode "\\.ya?ml\\'")
+  :mode "\\.ya?ml\\'")
 
 (use-package dockerfile-mode
   :ensure t
@@ -602,4 +609,3 @@ Including indent-buffer, which should not be called automatically on save."
 ;; (use-package pkgbuild-mode
 ;;   :ensure t
 ;;   :mode "/PKGBUILD\\'")
-
