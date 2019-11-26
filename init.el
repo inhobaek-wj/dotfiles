@@ -311,11 +311,11 @@ Including indent-buffer, which should not be called automatically on save."
   )
 
 ;;; https://github.com/ralesi/ranger.el
-(use-package ranger
-  :ensure t
-  :config
-  ;; (ranger-override-dired-mode t)
-  )
+;; (use-package ranger
+;;   :ensure t
+;;   :config
+;;   ;; (ranger-override-dired-mode t)
+;;   )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; programing related
