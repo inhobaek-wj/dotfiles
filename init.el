@@ -8,6 +8,7 @@
 
 ;;; Korean
 (set-language-environment "Korean")
+(global-set-key (kbd "S-SPC") 'toggle-korean-input-method)
 
 ;;; date expression in English
 (setq system-time-locale "C")
