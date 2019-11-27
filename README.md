@@ -6,4 +6,4 @@ This is my emacs config file.
 
 CentOS 7 : emacs 26.1
 
-manjaro-kde plazma : emacs 26.2
+anjaro-kde plazma : emacs 26.2
