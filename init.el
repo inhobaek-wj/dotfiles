@@ -84,9 +84,53 @@
 (global-visual-line-mode t)
 
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; custom global variables
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(setq global-line-num 0)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; custom functions
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+(defun goto-code-from-error ()
+  (interactive)
+
+;; TODO: check if this function is called from compilation buffer.
+;; TODO: check current line is valid.
+;; TODO: highlighting compilation buffer
+
+  (setq current-line
+        (string-trim
+         (buffer-substring-no-properties (line-beginning-position) (line-end-position))))
+
+  (setq path-and-num (split-string current-line "("))
+  (setq class-path-list (split-string (pop path-and-num) "\\."))
+  (nbutlast class-path-list 1)
+  (setq class-path (mapconcat `identity class-path-list "."))
+
+  (setq text-with-line-num (pop path-and-num))
+
+  (setq global-line-num
+        (string-to-number
+         (when (string-match "[0-9]+" text-with-line-num)
+           (match-string 0 text-with-line-num))
+         )
+        )
+
+  (minibuffer-with-setup-hook
+      (lambda () (insert class-path))
+    (call-interactively #'projectile-find-file-other-window))
+
+  )
+
+(defun goto-global-linum ()
+  (interactive)
+  (goto-line global-line-num)
+  )
 
 ;; copy region if active
 ;; otherwise copy to end of current line
@@ -242,6 +286,12 @@ Including indent-buffer, which should not be called automatically on save."
 (global-set-key (kbd "M-W") 'copy-whole-lines)
 
 (global-set-key (kbd "C-c n") 'cleanup-buffer)
+
+;; for testing and debuging
+(global-set-key (kbd "C-c d c") 'dap-java-run-test-class)
+(global-set-key (kbd "C-c d m") 'dap-java-run-test-method)
+(global-set-key (kbd "M-g l") 'goto-global-linum)
+(global-set-key (kbd "M-g e") 'goto-code-from-error)
 
 ;; (global-set-key (kbd "M-o") 'ace-window)
 
