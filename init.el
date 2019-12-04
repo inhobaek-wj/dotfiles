@@ -66,10 +66,10 @@
 (add-hook
  'after-change-major-mode-hook
  '(lambda ()
-    (setq whitespace-line-column nil
+    (setq whitespace-line-column 150;;nil
           whitespace-style '(face tabs trailing lines-tail tab-mark))))
 
-;; (add-hook 'before-save-hook 'cleanup-buffer)
+(add-hook 'before-save-hook 'cleanup-buffer)
 
 ;;; disable tabs mode
 (setq-default indent-tabs-mode nil)
@@ -95,13 +95,12 @@
 ;; custom functions
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-
 (defun goto-code-from-error ()
   (interactive)
 
-;; TODO: check if this function is called from compilation buffer.
-;; TODO: check current line is valid.
-;; TODO: highlighting compilation buffer
+  ;; TODO: check if this function is called from compilation buffer.
+  ;; TODO: check current line is valid.
+  ;; TODO: highlighting compilation buffer
 
   (setq current-line
         (string-trim
@@ -311,6 +310,12 @@ Including indent-buffer, which should not be called automatically on save."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; utility
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package autopair
+  :ensure t
+  :init
+  (autopair-global-mode)
+  )
 
 (use-package delight
   :ensure t)
