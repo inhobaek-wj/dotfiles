@@ -83,6 +83,8 @@
 ;; word-wrap
 (global-visual-line-mode t)
 
+;; beep sound off
+(setq visible-bell 1)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -223,33 +225,33 @@ Including indent-buffer, which should not be called automatically on save."
 
 ;;; theme
 ;;; https://github.com/bbatsov/solarized-emacs
-(use-package solarized-theme
-  :ensure t
-  :init
-  ;;; org에서 커진 한글 폰트가 너무 안 예뻐서
-  (setq solarized-height-minus-1 1.0)
-  (setq solarized-height-plus-1 1.0)
-  (setq solarized-height-plus-2 1.0)
-  (setq solarized-height-plus-3 1.0)
-  (setq solarized-height-plus-4 1.0)
-  :config
-  (load-theme 'solarized-light 'NO-CONFIRM)
-  (defconst my/solarized-light-red "#FF6E64")
-  (defconst my/solarized-light-green "#B4C342")
-  (defconst my/solarized-light-orange "#F2804F")
-  (defconst my/solarized-base2 "#EEE8D5")
-  (defconst my/solarized-hl "#EEEED5")
-  (progn
-    (custom-theme-set-faces
-     'solarized-light
-     `(hl-line
-       ((t (:background ,my/solarized-hl))))))
-  )
+;; (use-package solarized-theme
+;;   :ensure t
+;;   :init
+;;   ;;; org에서 커진 한글 폰트가 너무 안 예뻐서
+;;   (setq solarized-height-minus-1 1.0)
+;;   (setq solarized-height-plus-1 1.0)
+;;   (setq solarized-height-plus-2 1.0)
+;;   (setq solarized-height-plus-3 1.0)
+;;   (setq solarized-height-plus-4 1.0)
+;;   :config
+;;   (load-theme 'solarized-light 'NO-CONFIRM)
+;;   (defconst my/solarized-light-red "#FF6E64")
+;;   (defconst my/solarized-light-green "#B4C342")
+;;   (defconst my/solarized-light-orange "#F2804F")
+;;   (defconst my/solarized-base2 "#EEE8D5")
+;;   (defconst my/solarized-hl "#EEEED5")
+;;   (progn
+;;     (custom-theme-set-faces
+;;      'solarized-light
+;;      `(hl-line
+;;        ((t (:background ,my/solarized-hl))))))
+;;   )
 
-(use-package color-theme-sanityinc-tomorrow
-  :ensure t
-  :init
-  :config)
+;; (use-package color-theme-sanityinc-tomorrow
+;;   :ensure t
+;;   :init
+;;   :config)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
