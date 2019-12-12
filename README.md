@@ -4,6 +4,6 @@ This is my emacs config file.
 
 ### my environment
 
-CentOS 7 : emacs 26.1
+CentOS 7 - emacs 26.3
 
-anjaro-kde plazma : emacs 26.2
+anjaro-kde plazma - emacs 26.2
