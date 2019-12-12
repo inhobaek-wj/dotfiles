@@ -506,6 +506,7 @@ Including indent-buffer, which should not be called automatically on save."
   :config
   (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
   (add-to-list 'auto-mode-alist '("\\.babelrc\\'" . js2-mode))
+  (setq js2-basic-offset 2)
   ;; Better imenu
   (add-hook 'js2-mode-hook #'js2-imenu-extras-mode))
 
@@ -553,6 +554,7 @@ Including indent-buffer, which should not be called automatically on save."
   :ensure    t
   :config    (bind-keys :map json-mode-map
                         ("C-c i" . json-mode-beautify))
+  (setq json-mode-indent-offset 2)
   :mode      ("\\.\\(json\\)$" . json-mode))
 
 (use-package sass-mode
@@ -632,6 +634,8 @@ Including indent-buffer, which should not be called automatically on save."
          "-javaagent:/home/jake/.m2/repository/org/projectlombok/lombok/1.18.10/lombok-1.18.10.jar"
          "-Xbootclasspath/a:/home/jake/.m2/repository/org/projectlombok/lombok/1.18.10/lombok-1.18.10.jar"
          ))
+  (add-hook 'java-mode-hook (lambda ()
+                              (setq c-basic-offset 2)))
   )
 
 ;; (setq lsp-ui-sideline-update-mode 'point)
