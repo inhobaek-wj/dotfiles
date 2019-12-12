@@ -69,7 +69,7 @@
     (setq whitespace-line-column 150;;nil
           whitespace-style '(face tabs trailing lines-tail tab-mark))))
 
-(add-hook 'before-save-hook 'cleanup-buffer)
+;; (add-hook 'before-save-hook 'cleanup-buffer)
 
 ;;; disable tabs mode
 (setq-default indent-tabs-mode nil)
@@ -225,33 +225,33 @@ Including indent-buffer, which should not be called automatically on save."
 
 ;;; theme
 ;;; https://github.com/bbatsov/solarized-emacs
-;; (use-package solarized-theme
-;;   :ensure t
-;;   :init
-;;   ;;; org에서 커진 한글 폰트가 너무 안 예뻐서
-;;   (setq solarized-height-minus-1 1.0)
-;;   (setq solarized-height-plus-1 1.0)
-;;   (setq solarized-height-plus-2 1.0)
-;;   (setq solarized-height-plus-3 1.0)
-;;   (setq solarized-height-plus-4 1.0)
-;;   :config
-;;   (load-theme 'solarized-light 'NO-CONFIRM)
-;;   (defconst my/solarized-light-red "#FF6E64")
-;;   (defconst my/solarized-light-green "#B4C342")
-;;   (defconst my/solarized-light-orange "#F2804F")
-;;   (defconst my/solarized-base2 "#EEE8D5")
-;;   (defconst my/solarized-hl "#EEEED5")
-;;   (progn
-;;     (custom-theme-set-faces
-;;      'solarized-light
-;;      `(hl-line
-;;        ((t (:background ,my/solarized-hl))))))
-;;   )
+(use-package solarized-theme
+  :ensure t
+  :init
+  ;;; org에서 커진 한글 폰트가 너무 안 예뻐서
+  (setq solarized-height-minus-1 1.0)
+  (setq solarized-height-plus-1 1.0)
+  (setq solarized-height-plus-2 1.0)
+  (setq solarized-height-plus-3 1.0)
+  (setq solarized-height-plus-4 1.0)
+  :config
+  (load-theme 'solarized-light 'NO-CONFIRM)
+  (defconst my/solarized-light-red "#FF6E64")
+  (defconst my/solarized-light-green "#B4C342")
+  (defconst my/solarized-light-orange "#F2804F")
+  (defconst my/solarized-base2 "#EEE8D5")
+  (defconst my/solarized-hl "#EEEED5")
+  (progn
+    (custom-theme-set-faces
+     'solarized-light
+     `(hl-line
+       ((t (:background ,my/solarized-hl))))))
+  )
 
-;; (use-package color-theme-sanityinc-tomorrow
-;;   :ensure t
-;;   :init
-;;   :config)
+(use-package color-theme-sanityinc-tomorrow
+  :ensure t
+  :init
+  :config)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -505,6 +505,7 @@ Including indent-buffer, which should not be called automatically on save."
   :ensure t
   :config
   (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+  (add-to-list 'auto-mode-alist '("\\.babelrc\\'" . js2-mode))
   ;; Better imenu
   (add-hook 'js2-mode-hook #'js2-imenu-extras-mode))
 
@@ -534,14 +535,19 @@ Including indent-buffer, which should not be called automatically on save."
   :init
   (defun my-web-mode-hook ()
     "Hooks for Web mode."
-    (setq web-mode-markup-indent-offset 4)
-    (setq web-mode-code-indent-offset 4)
-    (setq web-mode-css-indent-offset 4))
+    (setq web-mode-markup-indent-offset 2)
+    (setq web-mode-code-indent-offset 2)
+    (setq web-mode-css-indent-offset 2)
+    (setq web-mode-style-padding  0
+          web-mode-script-padding 0)
+    )
 
   (add-hook 'web-mode-hook  'my-web-mode-hook)
   (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.css\\'" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.jsp\\'" . web-mode)))
+  (add-to-list 'auto-mode-alist '("\\.jsp\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.vue\\'" . web-mode))
+  )
 
 (use-package json-mode
   :ensure    t
@@ -631,10 +637,23 @@ Including indent-buffer, which should not be called automatically on save."
 ;; (setq lsp-ui-sideline-update-mode 'point)
 
 
+;;; vue
+;; issue #1. not install vue-mode and it is about Failed to verify signature archive-contents.sig.
+;; solution: upgrade emacs version 26.1 to 26.3.
+;; issue #2. can't find vls command.
+;; solution: add vls command path(which vls) to PATH.
+
+;; requirement npm i -g vue-language-server
+;; (use-package vue-mode
+;;   :ensure t)
+;; (require 'lsp-mode)
+;; (add-hook 'vue-mode-hook #'lsp)
+;; (add-to-list 'auto-mode-alist '("\\.vue\\'" . vue-mode))
+
+
 ;;; clojure
 (use-package cider
   :ensure t)
-
 
 (use-package groovy-mode
   :ensure    t
@@ -652,6 +671,9 @@ Including indent-buffer, which should not be called automatically on save."
 (use-package dockerfile-mode
   :ensure t
   :mode "/Dockerfile\\'")
+
+
+
 
 ;; (use-package kotlin-mode
 ;;   :ensure t
