@@ -223,35 +223,35 @@ Including indent-buffer, which should not be called automatically on save."
 (when (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 
 
-;; ;;; theme
-;; ;;; https://github.com/bbatsov/solarized-emacs
-;; (use-package solarized-theme
-;;   :ensure t
-;;   :init
-;;   ;;; org에서 커진 한글 폰트가 너무 안 예뻐서
-;;   (setq solarized-height-minus-1 1.0)
-;;   (setq solarized-height-plus-1 1.0)
-;;   (setq solarized-height-plus-2 1.0)
-;;   (setq solarized-height-plus-3 1.0)
-;;   (setq solarized-height-plus-4 1.0)
-;;   :config
-;;   (load-theme 'solarized-light 'NO-CONFIRM)
-;;   (defconst my/solarized-light-red "#FF6E64")
-;;   (defconst my/solarized-light-green "#B4C342")
-;;   (defconst my/solarized-light-orange "#F2804F")
-;;   (defconst my/solarized-base2 "#EEE8D5")
-;;   (defconst my/solarized-hl "#EEEED5")
-;;   (progn
-;;     (custom-theme-set-faces
-;;      'solarized-light
-;;      `(hl-line
-;;        ((t (:background ,my/solarized-hl))))))
-;;   )
+;;; theme
+;;; https://github.com/bbatsov/solarized-emacs
+(use-package solarized-theme
+  :ensure t
+  :init
+  ;;; org에서 커진 한글 폰트가 너무 안 예뻐서
+  (setq solarized-height-minus-1 1.0)
+  (setq solarized-height-plus-1 1.0)
+  (setq solarized-height-plus-2 1.0)
+  (setq solarized-height-plus-3 1.0)
+  (setq solarized-height-plus-4 1.0)
+  :config
+  (load-theme 'solarized-light 'NO-CONFIRM)
+  (defconst my/solarized-light-red "#FF6E64")
+  (defconst my/solarized-light-green "#B4C342")
+  (defconst my/solarized-light-orange "#F2804F")
+  (defconst my/solarized-base2 "#EEE8D5")
+  (defconst my/solarized-hl "#EEEED5")
+  (progn
+    (custom-theme-set-faces
+     'solarized-light
+     `(hl-line
+       ((t (:background ,my/solarized-hl))))))
+  )
 
-;; (use-package color-theme-sanityinc-tomorrow
-;;   :ensure t
-;;   :init
-;;   :config)
+(use-package color-theme-sanityinc-tomorrow
+  :ensure t
+  :init
+  :config)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -580,6 +580,7 @@ Including indent-buffer, which should not be called automatically on save."
   :config
   ;; disable weird indentation
   (setq lsp-enable-on-type-formatting nil)
+  (setq lsp-enable-indentation nil)
   )
 
 
@@ -597,7 +598,7 @@ Including indent-buffer, which should not be called automatically on save."
           (use-package lsp-ui
             :ensure t
             :config
-            (setq lsp-ui-doc-enable t
+            (setq lsp-ui-doc-enable nil
                   lsp-ui-sideline-enable t
                   lsp-ui-flycheck-enable t
                   )
