@@ -223,35 +223,35 @@ Including indent-buffer, which should not be called automatically on save."
 (when (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 
 
-;;; theme
-;;; https://github.com/bbatsov/solarized-emacs
-(use-package solarized-theme
-  :ensure t
-  :init
-  ;;; org에서 커진 한글 폰트가 너무 안 예뻐서
-  (setq solarized-height-minus-1 1.0)
-  (setq solarized-height-plus-1 1.0)
-  (setq solarized-height-plus-2 1.0)
-  (setq solarized-height-plus-3 1.0)
-  (setq solarized-height-plus-4 1.0)
-  :config
-  (load-theme 'solarized-light 'NO-CONFIRM)
-  (defconst my/solarized-light-red "#FF6E64")
-  (defconst my/solarized-light-green "#B4C342")
-  (defconst my/solarized-light-orange "#F2804F")
-  (defconst my/solarized-base2 "#EEE8D5")
-  (defconst my/solarized-hl "#EEEED5")
-  (progn
-    (custom-theme-set-faces
-     'solarized-light
-     `(hl-line
-       ((t (:background ,my/solarized-hl))))))
-  )
+;; ;;; theme
+;; ;;; https://github.com/bbatsov/solarized-emacs
+;; (use-package solarized-theme
+;;   :ensure t
+;;   :init
+;;   ;;; org에서 커진 한글 폰트가 너무 안 예뻐서
+;;   (setq solarized-height-minus-1 1.0)
+;;   (setq solarized-height-plus-1 1.0)
+;;   (setq solarized-height-plus-2 1.0)
+;;   (setq solarized-height-plus-3 1.0)
+;;   (setq solarized-height-plus-4 1.0)
+;;   :config
+;;   (load-theme 'solarized-light 'NO-CONFIRM)
+;;   (defconst my/solarized-light-red "#FF6E64")
+;;   (defconst my/solarized-light-green "#B4C342")
+;;   (defconst my/solarized-light-orange "#F2804F")
+;;   (defconst my/solarized-base2 "#EEE8D5")
+;;   (defconst my/solarized-hl "#EEEED5")
+;;   (progn
+;;     (custom-theme-set-faces
+;;      'solarized-light
+;;      `(hl-line
+;;        ((t (:background ,my/solarized-hl))))))
+;;   )
 
-(use-package color-theme-sanityinc-tomorrow
-  :ensure t
-  :init
-  :config)
+;; (use-package color-theme-sanityinc-tomorrow
+;;   :ensure t
+;;   :init
+;;   :config)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -301,13 +301,13 @@ Including indent-buffer, which should not be called automatically on save."
 ;; org mode
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(use-package org
-  :pin org
-  :ensure org-plus-contrib
-  :bind (
-         ;; ("C-x C-m" . helm-M-x)
-         ;; ("C-x b" . helm-mini)
-         ))
+;; (use-package org
+;;   :pin org
+;;   :ensure org-plus-contrib
+;;   :bind (
+;;          ;; ("C-x C-m" . helm-M-x)
+;;          ;; ("C-x b" . helm-mini)
+;;          ))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; utility
@@ -581,6 +581,7 @@ Including indent-buffer, which should not be called automatically on save."
   ;; disable weird indentation
   (setq lsp-enable-on-type-formatting nil)
   (setq lsp-enable-indentation nil)
+  :commands lsp
   )
 
 
@@ -648,7 +649,7 @@ Including indent-buffer, which should not be called automatically on save."
 ;; issue #2. can't find vls command.
 ;; solution: add vls command path(which vls) to PATH.
 
-;; requirement npm i -g vue-language-server
+;;;; requirement npm i -g vue-language-server
 ;; (use-package vue-mode
 ;;   :ensure t)
 ;; (require 'lsp-mode)
@@ -677,7 +678,39 @@ Including indent-buffer, which should not be called automatically on save."
   :ensure t
   :mode "/Dockerfile\\'")
 
+;;; dart mode.
+;;; need to install dart package. sudo pacman -Syu dart
+(use-package dart-mode
+  :ensure t
+  :init
+  (setq lsp-dart-sdk-dir "~/development/flutter/bin/cache/dart-sdk/")
+  (setq lsp-dart--server-command "pub global activate dart_language_server")
+  )
 
+(require 'lsp-mode)
+(add-hook 'dart-mode-hook 'lsp)
+(with-eval-after-load "projectile"
+  (add-to-list 'projectile-project-root-files-bottom-up "pubspec.yaml")
+  (add-to-list 'projectile-project-root-files-bottom-up "BUILD"))
+
+(setq lsp-auto-guess-root t)
+
+;;; flutter
+(use-package flutter
+  :after dart-mode
+  :ensure t
+  :init
+  (setq flutter-sdk-path "~/development/flutter/")
+  :bind
+  (:map dart-mode-map
+        ("C-M-x" . #'flutter-run-or-hot-reload)))
+
+;; Optional
+(use-package flutter-l10n-flycheck
+  :after flutter
+  :ensure t
+  :config
+  (flutter-l10n-flycheck-setup))
 
 
 ;; (use-package kotlin-mode
