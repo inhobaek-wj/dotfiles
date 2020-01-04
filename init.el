@@ -473,6 +473,7 @@ Including indent-buffer, which should not be called automatically on save."
     (company-statistics-mode))
   (setq company-idle-delay 0)
   (setq company-show-numbers "on")
+  (setq company-minimum-prefix-length 1)
   (add-hook 'prog-mode-hook 'company-mode))
 
 
