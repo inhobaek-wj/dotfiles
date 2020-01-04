@@ -585,6 +585,11 @@ Including indent-buffer, which should not be called automatically on save."
   :hook (go-mode . lsp-deferred)
   )
 
+(use-package yasnippet
+  :ensure t
+  :commands yas-minor-mode
+  :hook (go-mode .yas-mirror-mode)
+  )
 
 ;;; java
 ;;; lsp-java
@@ -594,7 +599,6 @@ Including indent-buffer, which should not be called automatically on save."
   :init (progn
           (require 'cc-mode)
           (use-package projectile :ensure t)
-          (use-package yasnippet :ensure t)
           (use-package hydra :ensure t)
           (use-package company-lsp :ensure t)
           (use-package lsp-ui
