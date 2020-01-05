@@ -235,21 +235,27 @@ Including indent-buffer, which should not be called automatically on save."
   (setq solarized-height-plus-3 1.0)
   (setq solarized-height-plus-4 1.0)
   :config
-  (load-theme 'solarized-light 'NO-CONFIRM)
+  ;; (load-theme 'solarized-light 'NO-CONFIRM)
   (defconst my/solarized-light-red "#FF6E64")
   (defconst my/solarized-light-green "#B4C342")
   (defconst my/solarized-light-orange "#F2804F")
   (defconst my/solarized-base2 "#EEE8D5")
   (defconst my/solarized-hl "#EEEED5")
-  (progn
-    (custom-theme-set-faces
-     'solarized-light
-     `(hl-line
-       ((t (:background ,my/solarized-hl))))))
+  ;; (progn
+  ;;   (custom-theme-set-faces
+  ;;    'solarized-light
+  ;;    `(hl-line
+  ;;      ((t (:background ,my/solarized-hl))))))
   )
 
 (use-package color-theme-sanityinc-tomorrow
   :ensure t
+  :init
+  :config)
+
+
+(use-package heroku-theme
+  ;; :ensure t
   :init
   :config)
 
@@ -294,8 +300,6 @@ Including indent-buffer, which should not be called automatically on save."
 (global-set-key (kbd "M-g l") 'goto-global-linum)
 (global-set-key (kbd "M-g e") 'goto-code-from-error)
 
-;; (global-set-key (kbd "M-o") 'ace-window)
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; org mode
@@ -313,11 +317,18 @@ Including indent-buffer, which should not be called automatically on save."
 ;; utility
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(use-package autopair
-  :ensure t
-  :init
-  (autopair-global-mode)
-  )
+(use-package multiple-cursors
+  :bind
+  (("C-c n" . mc/mark-next-like-this)
+   ("C-c p" . mc/mark-previous-like-this)))
+
+;; (use-package autopair
+;;   :ensure t
+;;   :init
+;;   (autopair-global-mode)
+;;   )
+(use-package smartparens
+  :defer)
 
 (use-package delight
   :ensure t)
@@ -328,9 +339,29 @@ Including indent-buffer, which should not be called automatically on save."
   :init
   (eyebrowse-mode t))
 
-;; (use-package ace-window
-;;   :ensure t
-;;   :config)
+(use-package ace-window
+  :ensure t
+  :init
+  (setq aw-scope 'frame ; limit to single frame (useful when using exwm)
+        aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
+  :bind
+  ("C-x o" . ace-window))
+
+(use-package windmove
+  :ensure t
+  :demand
+  :bind
+  (("C-s-n" . windmove-down)
+   ("C-s-p" . windmove-up)
+   ("C-s-b" . windmove-left)
+   ("C-s-f" . windmove-right)
+   ("C-s-j" . windmove-down)
+   ("C-s-k" . windmove-up)
+   ("C-s-h" . windmove-left)
+   ("C-s-l" . windmove-right))
+  :config
+  (windmove-default-keybindings))
+
 
 (use-package counsel
   :ensure t)
