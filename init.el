@@ -322,13 +322,13 @@ Including indent-buffer, which should not be called automatically on save."
   (("C-c n" . mc/mark-next-like-this)
    ("C-c p" . mc/mark-previous-like-this)))
 
-;; (use-package autopair
-;;   :ensure t
-;;   :init
-;;   (autopair-global-mode)
-;;   )
-(use-package smartparens
-  :defer)
+(use-package autopair
+  :ensure t
+  :init
+  (autopair-global-mode)
+  )
+;; (use-package smartparens
+;;   :defer)
 
 (use-package delight
   :ensure t)
@@ -408,6 +408,9 @@ Including indent-buffer, which should not be called automatically on save."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; programing related
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package auto-complete
+  :ensure t)
 
 ;;; projectile
 ;;; https://github.com/bbatsov/projectile
@@ -609,19 +612,37 @@ Including indent-buffer, which should not be called automatically on save."
   :init
   (setq lsp-prefer-flymake nil)
   :ensure t
+  :commands lsp
   :config
   ;; disable weird indentation
   (setq lsp-enable-on-type-formatting nil)
   (setq lsp-enable-indentation nil)
-  :commands (lsp lsp-deferred)
-  :hook (go-mode . lsp-deferred)
   )
 
 (use-package yasnippet
   :ensure t
-  :commands yas-minor-mode
-  :hook (go-mode .yas-mirror-mode)
+  ;; :commands yas-minor-mode
+  ;; :hook (go-mode . yas-mirror-mode)
   )
+
+(use-package lsp-ui
+  :ensure t
+  :config
+  (setq lsp-ui-doc-enable nil
+        lsp-ui-sideline-enable t
+        lsp-ui-flycheck-enable t
+        )
+  :bind (:map
+         lsp-ui-mode-map
+         ("C-c C-l" . lsp-ui-sideline-apply-code-actions)
+         ("C-c C-i" . lsp-ui-find-workspace-symbol)
+         ("C-c C-g" . lsp-ui-doc-glance)
+         )
+  :after lsp-mode)
+
+(use-package company-lsp
+  :ensure t
+  :commands company-lsp)
 
 ;;; java
 ;;; lsp-java
@@ -632,20 +653,6 @@ Including indent-buffer, which should not be called automatically on save."
           (require 'cc-mode)
           (use-package projectile :ensure t)
           (use-package hydra :ensure t)
-          (use-package company-lsp :ensure t)
-          (use-package lsp-ui
-            :ensure t
-            :config
-            (setq lsp-ui-doc-enable nil
-                  lsp-ui-sideline-enable t
-                  lsp-ui-flycheck-enable t
-                  )
-            :bind (:map
-                   lsp-ui-mode-map
-                   ("C-c C-l" . lsp-ui-sideline-apply-code-actions)
-                   ("C-c C-i" . lsp-ui-find-workspace-symbol)
-                   )
-            :after lsp-mode)
           (use-package dap-mode
             :ensure t
             :after lsp-mode
@@ -749,6 +756,32 @@ Including indent-buffer, which should not be called automatically on save."
   :config
   (flutter-l10n-flycheck-setup))
 
+
+;;; go mode
+;; go get -u github.com/nsf/gocode
+;; go get -u golang.org/x/tools/...
+(use-package go-mode
+  :ensure t
+  :init(progn
+         (use-package go-eldoc
+           :ensure t
+           :hook (go-mode-hook . go-eldoc-setup))
+         )
+
+  :config
+  ;; (add-hook 'go-mode-hook 'lsp-deferred)
+  (add-hook 'go-mode-hook #'lsp)
+  (add-hook 'lsp-mode-hook 'lsp-ui-mode)
+
+  (setq exec-path (append exec-path '("~/development/go/bin")))
+
+  (setq lsp-gopls-use-placeholders nil)
+
+  ;; (add-to-list 'load-path "~/development/go/src/github.com/nsf/gocode/emacs")
+  ;; (require 'go-autocomplete) ;; this file is in a package above.
+  ;; (require 'auto-complete-config)
+  ;; (ac-config-default)
+  )
 
 ;; (use-package kotlin-mode
 ;;   :ensure t
