@@ -318,9 +318,10 @@ Including indent-buffer, which should not be called automatically on save."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package multiple-cursors
-  :bind
-  (("C-c n" . mc/mark-next-like-this)
-   ("C-c p" . mc/mark-previous-like-this)))
+  ;; :bind
+  ;; (("C-c n" . mc/mark-next-like-this)
+  ;;  ("C-c p" . mc/mark-previous-like-this))
+  )
 
 (use-package autopair
   :ensure t
@@ -760,6 +761,7 @@ Including indent-buffer, which should not be called automatically on save."
 ;;; go mode
 ;; go get -u github.com/nsf/gocode
 ;; go get -u golang.org/x/tools/...
+;; go get -u github.com/rogpeppe/godef
 (use-package go-mode
   :ensure t
   :init(progn
