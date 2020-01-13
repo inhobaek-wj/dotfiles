@@ -69,7 +69,7 @@
 ;;     (setq whitespace-line-column 150;;nil
 ;;           whitespace-style '(face tabs trailing lines-tail tab-mark))))
 
-(add-hook 'before-save-hook 'cleanup-buffer)
+;; (add-hook 'before-save-hook 'cleanup-buffer)
 
 ;;; disable tabs mode
 (setq-default indent-tabs-mode nil)
@@ -678,11 +678,11 @@ Including indent-buffer, which should not be called automatically on save."
          "-Xmx1G"
          "-XX:+UseG1GC"
          "-XX:+UseStringDeduplication"
-         "-javaagent:/home/jake/.m2/repository/org/projectlombok/lombok/1.18.10/lombok-1.18.10.jar"
-         "-Xbootclasspath/a:/home/jake/.m2/repository/org/projectlombok/lombok/1.18.10/lombok-1.18.10.jar"
+         "-javaagent:/home/jake/.m2/repository/org/projectlombok/lombok/1.18.10/lombok.jar"
+         "-Xbootclasspath/a:/home/jake/.m2/repository/org/projectlombok/lombok/1.18.10/lombok.jar"
          ))
   (add-hook 'java-mode-hook (lambda ()
-                              (setq c-basic-offset 2)))
+                              (setq c-basic-offset 4)))
   )
 
 ;; (setq lsp-ui-sideline-update-mode 'point)
@@ -778,6 +778,13 @@ Including indent-buffer, which should not be called automatically on save."
   (setq exec-path (append exec-path '("~/development/go/bin")))
 
   (setq lsp-gopls-use-placeholders nil)
+
+  (add-hook 'go-mode-hook (lambda ()
+                            (setq-default)
+                            (setq tab-width 4)
+                            (setq standard-indent 4)
+                            (setq indent-tabs-mode nil)
+                            ))
 
   ;; (add-to-list 'load-path "~/development/go/src/github.com/nsf/gocode/emacs")
   ;; (require 'go-autocomplete) ;; this file is in a package above.
