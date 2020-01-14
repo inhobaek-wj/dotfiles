@@ -86,6 +86,14 @@
 ;; beep sound off
 (setq visible-bell 1)
 
+;;; environment variables
+(use-package exec-path-from-shell
+  :ensure t
+  :config
+  (setq exec-path-from-shell-check-startup-files nil)
+  )
+(when (memq window-system '(mac ns x))
+  (exec-path-from-shell-initialize))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; custom global variables
@@ -769,7 +777,8 @@ Including indent-buffer, which should not be called automatically on save."
            :ensure t
            :hook (go-mode-hook . go-eldoc-setup))
          )
-
+  (use-package gotest
+    :ensure t)
   :config
   ;; (add-hook 'go-mode-hook 'lsp-deferred)
   (add-hook 'go-mode-hook #'lsp)
@@ -785,6 +794,14 @@ Including indent-buffer, which should not be called automatically on save."
                             (setq standard-indent 4)
                             (setq indent-tabs-mode nil)
                             ))
+
+  (exec-path-from-shell-copy-env "GOPATH")
+
+  (define-key go-mode-map (kbd "C-c f") 'go-test-current-file)
+  (define-key go-mode-map (kbd "C-c t") 'go-test-current-test)
+  (define-key go-mode-map (kbd "C-c p") 'go-test-current-project)
+  (define-key go-mode-map (kbd "C-c b") 'go-test-current-benchmark)
+  (define-key go-mode-map (kbd "C-c r") 'go-run)
 
   ;; (add-to-list 'load-path "~/development/go/src/github.com/nsf/gocode/emacs")
   ;; (require 'go-autocomplete) ;; this file is in a package above.
