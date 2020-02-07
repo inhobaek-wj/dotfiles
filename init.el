@@ -825,10 +825,13 @@ Including indent-buffer, which should not be called automatically on save."
 ;;   :ensure t
 ;;   :mode "/PKGBUILD\\'")
 
+;;; markdown mode
+;; need to install pandoc first.
 (use-package markdown-mode
   :ensure t
   :commands (markdown-mode gfm-mode)
   :mode (("README\\.md\\'" . gfm-mode)
          ("\\.md\\'" . markdown-mode)
          ("\\.markdown\\'" . markdown-mode))
-  :init (setq markdown-command "multimarkdown"))
+  :init (setq markdown-command "pandoc --from markdown --to html --ascii")
+  )
