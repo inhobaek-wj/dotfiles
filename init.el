@@ -535,8 +535,8 @@ Including indent-buffer, which should not be called automatically on save."
 ;;; elpy https://github.com/jorgenschaefer/elpy
 (use-package elpy
   :ensure t
-  :config (elpy-enable)
   :init
+  (elpy-enable)
   ;; For elpy
   ;; (setq elpy-rpc-python-command "python")
   ;; For interactive shell
@@ -775,7 +775,8 @@ Including indent-buffer, which should not be called automatically on save."
   :init(progn
          (use-package go-eldoc
            :ensure t
-           :hook (go-mode-hook . go-eldoc-setup))
+           ;; :hook (go-mode-hook . go-eldoc-setup)
+           )
          )
   (use-package gotest
     :ensure t)
@@ -823,3 +824,11 @@ Including indent-buffer, which should not be called automatically on save."
 ;; (use-package pkgbuild-mode
 ;;   :ensure t
 ;;   :mode "/PKGBUILD\\'")
+
+(use-package markdown-mode
+  :ensure t
+  :commands (markdown-mode gfm-mode)
+  :mode (("README\\.md\\'" . gfm-mode)
+         ("\\.md\\'" . markdown-mode)
+         ("\\.markdown\\'" . markdown-mode))
+  :init (setq markdown-command "multimarkdown"))
