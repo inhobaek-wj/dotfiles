@@ -6,23 +6,20 @@
 (require 'server)
 (server-start)
 
-;;; Korean
-(set-language-environment "Korean")
-
 ;;; date expression in English
 (setq system-time-locale "C")
 
 ;;; encoding.
-(set-language-environment   'utf-8)
+(set-language-environment "Korean")
 (set-keyboard-coding-system 'utf-8)
 (setq locale-coding-system  'utf-8)
 (set-default-coding-systems 'utf-8)
 (set-terminal-coding-system 'utf-8)
+(prefer-coding-system 'utf-8)
 
 ;; (unless (eq system-type 'windows-nt)
 ;;   (set-selection-coding-system 'utf-8))
 
-(prefer-coding-system 'utf-8)
 
 ;;; emacs가 init.el에 추가하는 설정 방지
 ;;; (custom-set-variables ...
@@ -49,6 +46,13 @@
       kept-old-versions 2
       kept-new-versions 2
       version-control t)
+
+;;; font
+(defun available-font? (font) (member font (font-family-list)))
+(when (available-font? "Consolas")
+  (set-frame-font "Consolas-15" nil t)
+  (set-fontset-font t 'hangul (font-spec :name "PCMyungjo-16"))
+  (setq-default line-spacing 2))
 
 ;;; whitespace mode
 ;; (global-whitespace-mode t)
@@ -279,8 +283,6 @@ Including indent-buffer, which should not be called automatically on save."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; korean input
-;; reference: https://pqrs.org/osx/karabiner/json.html
-;; reference: http://ohyecloudy.com/emacsian/2017/12/07/input-method-osx-karabiner-elements/
 (global-set-key (kbd "S-SPC") 'toggle-korean-input-method)
 
 ;; comment without region
