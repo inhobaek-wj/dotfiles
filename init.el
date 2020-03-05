@@ -279,6 +279,8 @@ Including indent-buffer, which should not be called automatically on save."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; korean input
+;; reference: https://pqrs.org/osx/karabiner/json.html
+;; reference: http://ohyecloudy.com/emacsian/2017/12/07/input-method-osx-karabiner-elements/
 (global-set-key (kbd "S-SPC") 'toggle-korean-input-method)
 
 ;; comment without region
