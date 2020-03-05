@@ -1,38 +1,68 @@
 {
-    "title": "Emacs",
-    "rules": [
+  "title": "Emacs",
+  "rules": [
+    {
+      "description": "emacs - friendly input method",
+      "manipulators": [
         {
-            "description": "emacs - friendly input method",
-            "manipulators": [
-                {
-                    "conditions": [
-                        {
-                            "bundle_identifiers": [
-                                "^org\\.gnu\\.Emacs$"
-                            ],
-                            "type": "frontmost_application_unless"
-                        }
-                    ],
-                    "from": {
-                        "key_code": "spacebar",
-                        "modifiers": {
-                            "mandatory": [
-                                "left_shift"
-                            ]
-                        }
-                    },
-                   "to": [
-                        {
-                            "key_code": "spacebar",
-                            "modifiers": [
-                                "caps_lock",
-                                "option"
-                            ]
-                        }
-                    ],
-                    "type": "basic"
-                }
-            ]
+          "conditions": [
+            {
+              "bundle_identifiers": [
+                "^org\\.gnu\\.Emacs$"
+              ],
+              "type": "frontmost_application_unless"
+            }
+          ],
+          "from": {
+            "key_code": "spacebar",
+            "modifiers": {
+              "mandatory": [
+                "left_shift"
+              ]
+            }
+          },
+          "to": [
+            {
+              "key_code": "spacebar",
+              "modifiers": [
+                "caps_lock",
+                "option"
+              ]
+            }
+          ],
+          "type": "basic"
+        },
+        {
+          "conditions": [
+            {
+              "bundle_identifiers": [
+                "^org\\.gnu\\.Emacs$"
+              ],
+              "type": "frontmost_application_unless"
+            }
+          ],
+          "from": {
+            "key_code": "5",
+            "modifiers": {
+              "mandatory": [
+                "left_shift",
+                "command"
+              ]
+            }
+          },
+          "to": [
+            {
+              "key_code": "5",
+              "modifiers": [
+                "left_shift",
+                "caps_lock",
+                "command"
+              ]
+            }
+          ],
+          "type": "basic"
         }
-    ]
+      ]
+    }
+  ]
 }
