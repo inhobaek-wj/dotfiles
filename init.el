@@ -8,7 +8,6 @@
 
 ;;; Korean
 (set-language-environment "Korean")
-(global-set-key (kbd "S-SPC") 'toggle-korean-input-method)
 
 ;;; date expression in English
 (setq system-time-locale "C")
@@ -262,10 +261,10 @@ Including indent-buffer, which should not be called automatically on save."
   :config)
 
 
-(use-package heroku-theme
-  ;; :ensure t
-  :init
-  :config)
+;; (use-package heroku-theme
+;;   ;; :ensure t
+;;   :init
+;;   :config)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -278,6 +277,9 @@ Including indent-buffer, which should not be called automatically on save."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; global key binding
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; korean input
+(global-set-key (kbd "S-SPC") 'toggle-korean-input-method)
 
 ;; comment without region
 (global-set-key (kbd "M-;") 'comment-dwim-line)
@@ -686,8 +688,8 @@ Including indent-buffer, which should not be called automatically on save."
          "-Xmx1G"
          "-XX:+UseG1GC"
          "-XX:+UseStringDeduplication"
-         "-javaagent:/home/jake/.m2/repository/org/projectlombok/lombok/1.18.10/lombok.jar"
-         "-Xbootclasspath/a:/home/jake/.m2/repository/org/projectlombok/lombok/1.18.10/lombok.jar"
+         "-javaagent:/Users/inho/.m2/repository/org/projectlombok/lombok/1.18.10/lombok.jar"
+         "-Xbootclasspath/a:/Users/inho/.m2/repository/org/projectlombok/lombok/1.18.10/lombok.jar"
          ))
   (add-hook 'java-mode-hook (lambda ()
                               (setq c-basic-offset 4)))
