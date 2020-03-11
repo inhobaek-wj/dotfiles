@@ -105,6 +105,7 @@
 (setq global-line-num 0)
 (setq my-github-url "https://github.com/inhobaek-wj")
 (setq work-git-url "http://aiotsrv.iptime.org:20181/")
+(setq my-local8100-url "http://localhost:8100/")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; custom functions
@@ -226,6 +227,11 @@ Including indent-buffer, which should not be called automatically on save."
   (browse-url work-git-url)
   )
 
+(defun browse-url-to-my-local8100 ()
+  (interactive)
+  (browse-url my-local8100-url)
+  )
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; UI setting
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -328,6 +334,7 @@ Including indent-buffer, which should not be called automatically on save."
 ;; custom browse url
 (global-set-key (kbd "C-c C-b g") 'browse-url-to-my-github)
 (global-set-key (kbd "C-c C-b w") 'browse-url-to-work-github)
+(global-set-key (kbd "C-c C-b l") 'browse-url-to-my-local8100)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; org mode
