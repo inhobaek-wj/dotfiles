@@ -103,6 +103,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (setq global-line-num 0)
+(setq my-github-url "https://github.com/inhobaek-wj")
+(setq work-git-url "http://aiotsrv.iptime.org:20181/")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; custom functions
@@ -214,6 +216,15 @@ Including indent-buffer, which should not be called automatically on save."
   (cleanup-buffer-safe)
   (indent-buffer))
 
+(defun browse-url-to-my-github ()
+  (interactive)
+  (browse-url my-github-url)
+  )
+
+(defun browse-url-to-work-github ()
+  (interactive)
+  (browse-url work-git-url)
+  )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; UI setting
@@ -314,6 +325,9 @@ Including indent-buffer, which should not be called automatically on save."
 (global-set-key (kbd "M-g l") 'goto-global-linum)
 (global-set-key (kbd "M-g e") 'goto-code-from-error)
 
+;; custom browse url
+(global-set-key (kbd "C-c C-b g") 'browse-url-to-my-github)
+(global-set-key (kbd "C-c C-b w") 'browse-url-to-work-github)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; org mode
