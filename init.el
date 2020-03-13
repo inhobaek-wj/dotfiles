@@ -332,7 +332,7 @@ Including indent-buffer, which should not be called automatically on save."
 (global-set-key (kbd "M-g e") 'goto-code-from-error)
 
 ;; custom browse url
-(global-set-key (kbd "C-c C-b g") 'browse-url-to-my-github)
+(global-set-key (kbd "C-c C-b m") 'browse-url-to-my-github)
 (global-set-key (kbd "C-c C-b w") 'browse-url-to-work-github)
 (global-set-key (kbd "C-c C-b l") 'browse-url-to-my-local8100)
 
