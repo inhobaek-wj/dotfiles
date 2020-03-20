@@ -680,6 +680,9 @@ Including indent-buffer, which should not be called automatically on save."
 (use-package company-lsp
   :ensure t
   ;; :commands company-lsp
+  ;; :init
+  ;; (setq company-lsp-enable-snippet t)
+  ;; (setq company-lsp-enable-recompletion t)
   )
 (push 'company-lsp company-backends)
 
@@ -719,6 +722,7 @@ Including indent-buffer, which should not be called automatically on save."
          "-javaagent:/Users/inho/.m2/repository/org/projectlombok/lombok/1.18.10/lombok.jar"
          "-Xbootclasspath/a:/Users/inho/.m2/repository/org/projectlombok/lombok/1.18.10/lombok.jar"
          ))
+  (setq lsp-java-server-install-dir "/Users/inho/.emacs.d/eclipse.jdt.ls/server/")
   (add-hook 'java-mode-hook (lambda ()
                               (setq c-basic-offset 4)))
   )
