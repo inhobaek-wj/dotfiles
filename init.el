@@ -543,7 +543,7 @@ Including indent-buffer, which should not be called automatically on save."
     (company-statistics-mode))
   (setq company-idle-delay 0)
   (setq company-show-numbers "on")
-  (setq company-minimum-prefix-length 1)
+  ;; (setq company-minimum-prefix-length 1)
   (add-hook 'prog-mode-hook 'company-mode))
 
 
@@ -657,8 +657,9 @@ Including indent-buffer, which should not be called automatically on save."
 
 (use-package yasnippet
   :ensure t
-  ;; :commands yas-minor-mode
-  ;; :hook (go-mode . yas-mirror-mode)
+  :init
+  (yas-reload-all)
+  (add-hook 'prog-mode-hook #'yas-minor-mode)
   )
 
 (use-package lsp-ui
@@ -678,7 +679,9 @@ Including indent-buffer, which should not be called automatically on save."
 
 (use-package company-lsp
   :ensure t
-  :commands company-lsp)
+  ;; :commands company-lsp
+  )
+(push 'company-lsp company-backends)
 
 ;;; java
 ;;; lsp-java
@@ -760,6 +763,7 @@ Including indent-buffer, which should not be called automatically on save."
 
 ;;; dart mode.
 ;;; need to install dart package. sudo pacman -Syu dart
+;;; when install flutter, it has dart-sdk internally.
 (use-package dart-mode
   :ensure t
   :init
