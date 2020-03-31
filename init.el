@@ -80,7 +80,7 @@
 ;; startup-message 안 보기
 (setq inhibit-startup-message t)
 ;; *scratch* 버퍼 깨끗하게 시작하기
-;;(setq initial-scratch-message nil)
+(setq initial-scratch-message nil)
 ;; 선택 텍스트를 타이핑할 때, 삭제
 (delete-selection-mode t)
 ;; word-wrap
@@ -277,15 +277,10 @@ Including indent-buffer, which should not be called automatically on save."
   )
 
 (use-package color-theme-sanityinc-tomorrow
-  :ensure t
-  :init
-  :config)
+  :defer t)
 
-
-;; (use-package heroku-theme
-;;   ;; :ensure t
-;;   :init
-;;   :config)
+(use-package heroku-theme
+  :defer t)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -434,12 +429,6 @@ Including indent-buffer, which should not be called automatically on save."
   (pdf-tools-install)
   )
 
-;;; https://github.com/ralesi/ranger.el
-;; (use-package ranger
-;;   :ensure t
-;;   :config
-;;   ;; (ranger-override-dired-mode t)
-;;   )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; programing related
@@ -523,19 +512,13 @@ Including indent-buffer, which should not be called automatically on save."
 
 (use-package company
   :ensure t
-  :diminish company-mode
-  :commands (company-complete company-mode)
-  :bind ( ;;([remap dabbrev-expand] . company-complete)
-         :map prog-mode-map
-         ([tab] . company-indent-or-complete-common))
-  :init (if (fboundp 'evil-declare-change-repeat)
-            (mapc #'evil-declare-change-repeat
-                  '(company-complete-common
-                    company-select-next
-                    company-select-previous
-                    company-complete-selection
-                    company-complete-number)))
-  (add-hook 'after-init-hook 'global-company-mode)
+  :bind (:map prog-mode-map
+              ([tab] . company-indent-or-complete-common))
+
+  :hook
+  (after-init . global-company-mode)
+  (prog-mode . company-mode)
+
   :config
   (use-package company-statistics
     :ensure t
@@ -543,14 +526,11 @@ Including indent-buffer, which should not be called automatically on save."
     (company-statistics-mode))
   (setq company-idle-delay 0)
   (setq company-show-numbers "on")
-  ;; (setq company-minimum-prefix-length 1)
-  (add-hook 'prog-mode-hook 'company-mode))
-
+  (setq company-minimum-prefix-length 1)
+  )
 
 (use-package magit
   :ensure t
-  ;; :config
-  ;; (setq magit-git-executable "/usr/libexec/git-core")
   :bind ("C-x g" . magit-status)
   )
 
@@ -562,8 +542,7 @@ Including indent-buffer, which should not be called automatically on save."
 ;;; elpy https://github.com/jorgenschaefer/elpy
 (use-package elpy
   :ensure t
-  :init
-  (elpy-enable)
+  :init (elpy-enable)
   ;; For elpy
   ;; (setq elpy-rpc-python-command "python")
   ;; For interactive shell
@@ -578,8 +557,12 @@ Including indent-buffer, which should not be called automatically on save."
   (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
   (add-to-list 'auto-mode-alist '("\\.babelrc\\'" . js2-mode))
   (setq js2-basic-offset 2)
-  ;; Better imenu
-  (add-hook 'js2-mode-hook #'js2-imenu-extras-mode))
+
+  (add-hook 'js2-mode-hook #'js2-imenu-extras-mode) ;; better imenu.
+  (add-hook 'js2-mode-hook (lambda ()
+                             (tern-mode)
+                             (company-mode)))
+  )
 
 ;;; git clone https://github.com/ternjs/tern
 ;;; npm install
@@ -589,11 +572,8 @@ Including indent-buffer, which should not be called automatically on save."
 ;;; First, install tern with above code.
 (use-package company-tern
   :ensure t
-  :init
-  (add-to-list 'company-backends 'company-tern))
-(add-hook 'js2-mode-hook (lambda ()
-                           (tern-mode)
-                           (company-mode)))
+  :init (add-to-list 'company-backends 'company-tern)
+  )
 
 ;;; Install indium. If indium is not working, check sudo npm install -g indium
 (unless (package-installed-p 'indium)
@@ -616,7 +596,6 @@ Including indent-buffer, which should not be called automatically on save."
 
   (add-hook 'web-mode-hook  'my-web-mode-hook)
   (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.css\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.jsp\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.vue\\'" . web-mode))
   )
@@ -625,24 +604,12 @@ Including indent-buffer, which should not be called automatically on save."
   :ensure    t
   :config    (bind-keys :map json-mode-map
                         ("C-c i" . json-mode-beautify))
-  (setq json-mode-indent-offset 2)
+  (setq json-indent-offset 2)
   :mode      ("\\.\\(json\\)$" . json-mode))
 
-(use-package sass-mode
+(use-package rainbow-mode
   :ensure t
-  :mode "\\.sass\\'")
-
-(use-package scss-mode
-  :ensure t
-  :mode "\\.scss\\'"
-  :init
-  (setq scss-compile-at-save nil))
-
-(use-package less-css-mode
-  :ensure t
-  :mode "\\.less\\'"
-  :init
-  (setq less-css-compile-at-save nil))
+  :hook (css-mode . rainbow-mode))
 
 (use-package lsp-mode
   :init
@@ -657,9 +624,8 @@ Including indent-buffer, which should not be called automatically on save."
 
 (use-package yasnippet
   :ensure t
-  :init
-  (yas-reload-all)
-  (add-hook 'prog-mode-hook #'yas-minor-mode)
+  :init (yas-reload-all)
+  :hook (prog-mode . yas-minor-mode)
   )
 
 (use-package lsp-ui
@@ -667,7 +633,8 @@ Including indent-buffer, which should not be called automatically on save."
   :config
   (setq lsp-ui-doc-enable nil
         lsp-ui-sideline-enable t
-        lsp-ui-flycheck-enable t
+        lsp-ui-flycheck-enable nil
+        ;; lsp-ui-sideline-update-mode 'point
         )
   :bind (:map
          lsp-ui-mode-map
@@ -675,14 +642,15 @@ Including indent-buffer, which should not be called automatically on save."
          ("C-c C-i" . lsp-ui-find-workspace-symbol)
          ("C-c C-g" . lsp-ui-doc-glance)
          )
-  :after lsp-mode)
+  :after lsp-mode
+  :hook (lsp-mode . lsp-ui-mode)
+  )
 
 (use-package company-lsp
   :ensure t
-  ;; :commands company-lsp
-  ;; :init
-  ;; (setq company-lsp-enable-snippet t)
-  ;; (setq company-lsp-enable-recompletion t)
+  :init
+  (setq company-lsp-enable-snippet t)
+  (setq company-lsp-enable-recompletion t)
   )
 (push 'company-lsp company-backends)
 
@@ -706,42 +674,26 @@ Including indent-buffer, which should not be called automatically on save."
             )
           )
   :config
-  (add-hook 'java-mode-hook 'lsp)
-  (require 'lsp-java-boot)
-  (add-hook 'lsp-mode-hook 'lsp-ui-mode)
-  ;; to enable the lenses
-  (add-hook 'lsp-mode-hook #'lsp-lens-mode)
-  (add-hook 'java-mode-hook #'lsp-java-boot-lens-mode)
-  (add-hook 'java-mode-hook 'flycheck-mode)
   (setq lsp-java-vmargs
         (list
          "-noverify"
          "-Xmx1G"
          "-XX:+UseG1GC"
          "-XX:+UseStringDeduplication"
-         "-javaagent:/Users/inho/.m2/repository/org/projectlombok/lombok/1.18.10/lombok.jar"
-         "-Xbootclasspath/a:/Users/inho/.m2/repository/org/projectlombok/lombok/1.18.10/lombok.jar"
-         ))
+         ;; "-javaagent:/Users/inho/.m2/repository/org/projectlombok/lombok/1.18.10/lombok.jar"
+         ;; "-Xbootclasspath/a:/Users/inho/.m2/repository/org/projectlombok/lombok/1.18.10/lombok.jar"
+         )
+        )
   (setq lsp-java-server-install-dir "/Users/inho/.emacs.d/eclipse.jdt.ls/server/")
+
+  (add-hook 'java-mode-hook 'lsp)
+  (require 'lsp-java-boot)
+  ;; to enable the lenses
+  (add-hook 'lsp-mode-hook #'lsp-lens-mode)
+  (add-hook 'java-mode-hook #'lsp-java-boot-lens-mode)
   (add-hook 'java-mode-hook (lambda ()
                               (setq c-basic-offset 4)))
   )
-
-;; (setq lsp-ui-sideline-update-mode 'point)
-
-
-;;; vue
-;; issue #1. not install vue-mode and it is about Failed to verify signature archive-contents.sig.
-;; solution: upgrade emacs version 26.1 to 26.3.
-;; issue #2. can't find vls command.
-;; solution: add vls command path(which vls) to PATH.
-
-;;;; requirement npm i -g vue-language-server
-;; (use-package vue-mode
-;;   :ensure t)
-;; (require 'lsp-mode)
-;; (add-hook 'vue-mode-hook #'lsp)
-;; (add-to-list 'auto-mode-alist '("\\.vue\\'" . vue-mode))
 
 
 ;;; clojure
@@ -751,19 +703,22 @@ Including indent-buffer, which should not be called automatically on save."
 (use-package groovy-mode
   :ensure    t
   :defer     t
-  :mode      ("\\.\\(groovy\\|gradle\\)$" . groovy-mode))
+  :mode      ("\\.\\(groovy\\|gradle\\)$" . groovy-mode)
+  :hook(groovy-mode . (lambda ()
+                        (c-set-offset 'label 4)))
 
-(add-hook 'groovy-mode-hook
-          (lambda ()
-            (c-set-offset 'label 4)))
+  )
+
 
 (use-package yaml-mode
   :ensure t
   :mode "\\.ya?ml\\'")
 
+
 (use-package dockerfile-mode
   :ensure t
   :mode "/Dockerfile\\'")
+
 
 ;;; dart mode.
 ;;; need to install dart package. sudo pacman -Syu dart
@@ -772,16 +727,13 @@ Including indent-buffer, which should not be called automatically on save."
   :ensure t
   :init
   (setq lsp-dart-sdk-dir "~/development/flutter/bin/cache/dart-sdk/")
-  (setq lsp-dart--server-command "pub global activate dart_language_server")
+  ;; (setq lsp-dart--server-command "pub global activate dart_language_server")
+  :hook
+  ((dart-mode . lsp))
+  :custom
+  (dart-format-on-save t)
   )
 
-(require 'lsp-mode)
-(add-hook 'dart-mode-hook 'lsp)
-(with-eval-after-load "projectile"
-  (add-to-list 'projectile-project-root-files-bottom-up "pubspec.yaml")
-  (add-to-list 'projectile-project-root-files-bottom-up "BUILD"))
-
-(setq lsp-auto-guess-root t)
 
 ;;; flutter
 (use-package flutter
@@ -793,12 +745,12 @@ Including indent-buffer, which should not be called automatically on save."
   (:map dart-mode-map
         ("C-M-x" . #'flutter-run-or-hot-reload)))
 
-;; Optional
-(use-package flutter-l10n-flycheck
-  :after flutter
-  :ensure t
-  :config
-  (flutter-l10n-flycheck-setup))
+;; ;; Optional
+;; (use-package flutter-l10n-flycheck
+;;   :after flutter
+;;   :ensure t
+;;   :config
+;;   (flutter-l10n-flycheck-setup))
 
 
 ;;; go mode
@@ -810,44 +762,33 @@ Including indent-buffer, which should not be called automatically on save."
   :init(progn
          (use-package go-eldoc
            :ensure t
-           ;; :hook (go-mode-hook . go-eldoc-setup)
            )
          )
   (use-package gotest
     :ensure t)
+  :hook
+  (
+   (go-mode . lsp)
+   (go-mode . (lambda ()
+                (setq-default)
+                (setq tab-width 4)
+                (setq standard-indent 4)
+                (setq indent-tabs-mode nil)
+                ))
+   )
+
   :config
-  ;; (add-hook 'go-mode-hook 'lsp-deferred)
-  (add-hook 'go-mode-hook #'lsp)
-  (add-hook 'lsp-mode-hook 'lsp-ui-mode)
-
   (setq exec-path (append exec-path '("~/development/go/bin")))
-
-  (setq lsp-gopls-use-placeholders nil)
-
-  (add-hook 'go-mode-hook (lambda ()
-                            (setq-default)
-                            (setq tab-width 4)
-                            (setq standard-indent 4)
-                            (setq indent-tabs-mode nil)
-                            ))
-
+  ;; (setq lsp-gopls-use-placeholders nil)
   (exec-path-from-shell-copy-env "GOPATH")
-
   (define-key go-mode-map (kbd "C-c f") 'go-test-current-file)
   (define-key go-mode-map (kbd "C-c t") 'go-test-current-test)
   (define-key go-mode-map (kbd "C-c p") 'go-test-current-project)
   (define-key go-mode-map (kbd "C-c b") 'go-test-current-benchmark)
   (define-key go-mode-map (kbd "C-c r") 'go-run)
 
-  ;; (add-to-list 'load-path "~/development/go/src/github.com/nsf/gocode/emacs")
-  ;; (require 'go-autocomplete) ;; this file is in a package above.
-  ;; (require 'auto-complete-config)
-  ;; (ac-config-default)
   )
 
-;; (use-package kotlin-mode
-;;   :ensure t
-;; :mode "\\.kt\\'")
 
 ;; (use-package js-doc
 ;;   :ensure t
@@ -856,9 +797,11 @@ Including indent-buffer, which should not be called automatically on save."
 ;;               ("C-c i"   . js-doc-insert-function-doc)
 ;; ("@" . js-doc-insert-tag)))
 
+
 ;; (use-package pkgbuild-mode
 ;;   :ensure t
 ;;   :mode "/PKGBUILD\\'")
+
 
 ;;; markdown mode
 ;; need to install pandoc first.
@@ -870,3 +813,11 @@ Including indent-buffer, which should not be called automatically on save."
          ("\\.markdown\\'" . markdown-mode))
   :init (setq markdown-command "pandoc --from markdown --to html --ascii")
   )
+
+
+;;;; requirement npm i -g vue-language-server
+;; (use-package vue-mode
+;;   :ensure t
+;;   :hook
+;;   (vue-mode . lsp)
+;;   )
