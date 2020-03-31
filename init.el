@@ -524,7 +524,7 @@ Including indent-buffer, which should not be called automatically on save."
     :ensure t
     :init
     (company-statistics-mode))
-  (setq company-idle-delay 0)
+  (setq company-idle-delay 0.3)
   (setq company-show-numbers "on")
   (setq company-minimum-prefix-length 1)
   )
@@ -633,7 +633,7 @@ Including indent-buffer, which should not be called automatically on save."
   :config
   (setq lsp-ui-doc-enable nil
         lsp-ui-sideline-enable t
-        lsp-ui-flycheck-enable nil
+        lsp-ui-flycheck-enable t
         ;; lsp-ui-sideline-update-mode 'point
         )
   :bind (:map
@@ -649,6 +649,9 @@ Including indent-buffer, which should not be called automatically on save."
 (use-package company-lsp
   :ensure t
   :init
+  (setq company-lsp-cache-candidates 'auto
+        company-lsp-filter-candidates t)
+  (setq company-lsp-async t)
   (setq company-lsp-enable-snippet t)
   (setq company-lsp-enable-recompletion t)
   )
@@ -726,7 +729,9 @@ Including indent-buffer, which should not be called automatically on save."
 (use-package dart-mode
   :ensure t
   :init
-  (setq lsp-dart-sdk-dir "~/development/flutter/bin/cache/dart-sdk/")
+  (setq lsp-dart-sdk-dir "~/development/flutter/bin/cache/dart-sdk/"
+        lsp-dart-suggest-from-unimported-libraries nil
+        )
   ;; (setq lsp-dart--server-command "pub global activate dart_language_server")
   :hook
   ((dart-mode . lsp))
