@@ -41,7 +41,7 @@
   (package-install 'use-package))
 
 ;;; backup
-(add-to-list 'backup-directory-alist '("." . "~/.emacs-saves"))
+(add-to-list 'backup-directory-alist '("." . "~/.config/.emacs-saves"))
 (setq delete-old-versions t
       kept-old-versions 2
       kept-new-versions 2
@@ -214,8 +214,16 @@ might be bad."
   "Perform a bunch of operations on the whitespace content of a buffer.
 Including indent-buffer, which should not be called automatically on save."
   (interactive)
-  (cleanup-buffer-safe)
-  (indent-buffer))
+
+  (let ((x major-mode))
+    (if (eq x 'go-mode)
+        (gofmt)
+      (cleanup-buffer-safe)
+      (indent-buffer)
+      (message "NoNoNo")
+      )
+    )
+  )
 
 (defun browse-url-to-my-github ()
   (interactive)
@@ -566,7 +574,7 @@ Including indent-buffer, which should not be called automatically on save."
 
 ;;; git clone https://github.com/ternjs/tern
 ;;; npm install
-(add-to-list 'load-path "~/.emacs.d/elpa/tern/emacs/")
+(add-to-list 'load-path "~/.config/.emacs.d/elpa/tern/emacs/")
 (autoload 'tern-mode "tern.el" nil t)
 
 ;;; First, install tern with above code.
@@ -729,7 +737,7 @@ Including indent-buffer, which should not be called automatically on save."
 (use-package dart-mode
   :ensure t
   :init
-  (setq lsp-dart-sdk-dir "~/development/flutter/bin/cache/dart-sdk/"
+  (setq lsp-dart-sdk-dir "~/Workspaces/development/flutter/bin/cache/dart-sdk/"
         lsp-dart-suggest-from-unimported-libraries nil
         )
   ;; (setq lsp-dart--server-command "pub global activate dart_language_server")
@@ -745,7 +753,7 @@ Including indent-buffer, which should not be called automatically on save."
   :after dart-mode
   :ensure t
   :init
-  (setq flutter-sdk-path "~/development/flutter/")
+  (setq flutter-sdk-path "~/Workspaces/development/flutter/")
   :bind
   (:map dart-mode-map
         ("C-M-x" . #'flutter-run-or-hot-reload)))
@@ -783,7 +791,7 @@ Including indent-buffer, which should not be called automatically on save."
    )
 
   :config
-  (setq exec-path (append exec-path '("~/development/go/bin")))
+  (setq exec-path (append exec-path '("~/Workspaces/development/go/bin")))
   ;; (setq lsp-gopls-use-placeholders nil)
   (exec-path-from-shell-copy-env "GOPATH")
   (define-key go-mode-map (kbd "C-c f") 'go-test-current-file)
