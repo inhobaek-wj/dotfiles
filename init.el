@@ -104,8 +104,7 @@
 
 (setq global-line-num 0)
 (setq my-github-url "https://github.com/inhobaek-wj")
-(setq work-git-url "http://aiotsrv.iptime.org:20181/")
-(setq my-local8100-url "http://localhost:8100/")
+(setq work-git-url "http://rnd.aiotholdings.com:20181/")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; custom functions
@@ -799,7 +798,6 @@ Including indent-buffer, which should not be called automatically on save."
   (define-key go-mode-map (kbd "C-c p") 'go-test-current-project)
   (define-key go-mode-map (kbd "C-c b") 'go-test-current-benchmark)
   (define-key go-mode-map (kbd "C-c r") 'go-run)
-
   )
 
 
