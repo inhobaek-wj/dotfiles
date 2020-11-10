@@ -798,6 +798,8 @@ Including indent-buffer, which should not be called automatically on save."
   (define-key go-mode-map (kbd "C-c p") 'go-test-current-project)
   (define-key go-mode-map (kbd "C-c b") 'go-test-current-benchmark)
   (define-key go-mode-map (kbd "C-c r") 'go-run)
+
+  (add-to-list 'lsp-file-watch-ignored "[/\\]vendor")
   )
 
 
