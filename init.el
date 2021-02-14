@@ -104,7 +104,9 @@
 
 (setq global-line-num 0)
 (setq my-github-url "https://github.com/inhobaek-wj")
-(setq work-git-url "http://rnd.aiotholdings.com:20181/")
+(setq work-git-url "http://git.aiotholdings.com")
+(setq redmine-url "http://redmine.aiotholdings.com")
+(setq mattermost-url "http://mattermost.aiotholdings.com")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; custom functions
@@ -219,7 +221,6 @@ Including indent-buffer, which should not be called automatically on save."
         (gofmt)
       (cleanup-buffer-safe)
       (indent-buffer)
-      (message "NoNoNo")
       )
     )
   )
@@ -237,6 +238,16 @@ Including indent-buffer, which should not be called automatically on save."
 (defun browse-url-to-my-local8100 ()
   (interactive)
   (browse-url my-local8100-url)
+  )
+
+(defun browse-url-to-redmine ()
+  (interactive)
+  (browse-url redmine-url)
+  )
+
+(defun browse-url-to-mattermost ()
+  (interactive)
+  (browse-url mattermost-url)
   )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -337,6 +348,8 @@ Including indent-buffer, which should not be called automatically on save."
 (global-set-key (kbd "C-c C-b m") 'browse-url-to-my-github)
 (global-set-key (kbd "C-c C-b w") 'browse-url-to-work-github)
 (global-set-key (kbd "C-c C-b l") 'browse-url-to-my-local8100)
+(global-set-key (kbd "C-c C-b r") 'browse-url-to-redmine)
+(global-set-key (kbd "C-c C-b t") 'browse-url-to-mattermost)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; org mode
@@ -573,7 +586,7 @@ Including indent-buffer, which should not be called automatically on save."
 
 ;;; git clone https://github.com/ternjs/tern
 ;;; npm install
-(add-to-list 'load-path "~/.config/.emacs.d/elpa/tern/emacs/")
+(add-to-list 'load-path "~/.emacs.d/elpa/tern/emacs/")
 (autoload 'tern-mode "tern.el" nil t)
 
 ;;; First, install tern with above code.
