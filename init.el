@@ -733,6 +733,11 @@ Including indent-buffer, which should not be called automatically on save."
   )
 
 
+(use-package jenkinsfile-mode
+  :ensure t
+  :mode "/Jenkinsfile\\'")
+
+
 (use-package yaml-mode
   :ensure t
   :mode "\\.ya?ml\\'")
