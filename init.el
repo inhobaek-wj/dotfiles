@@ -26,15 +26,30 @@
 ;;; https://jamiecollinson.com/blog/my-emacs-config/
 (setq custom-file (make-temp-file "emacs-custom"))
 
+;;; Bootstrap straight.el
+(setq package-enable-at-startup nil)
+
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+      (bootstrap-version 5))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
+
 ;;; packages
 (require 'package)
 (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/") t)
 ;; (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/") t)
-(add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
-(add-to-list 'package-archives '("melpa-milkbox" . "http://melpa.milkbox.net/packages/") t)
+;; (add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
+;; (add-to-list 'package-archives '("melpa-milkbox" . "http://melpa.milkbox.net/packages/") t)
 (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
-
 (package-initialize)
 (when (not (package-installed-p 'use-package))
   (package-refresh-contents)
@@ -221,6 +236,7 @@ Including indent-buffer, which should not be called automatically on save."
         (gofmt)
       (cleanup-buffer-safe)
       (indent-buffer)
+      ;; (message "NoNoNo")
       )
     )
   )
@@ -586,14 +602,14 @@ Including indent-buffer, which should not be called automatically on save."
 
 ;;; git clone https://github.com/ternjs/tern
 ;;; npm install
-(add-to-list 'load-path "~/.emacs.d/elpa/tern/emacs/")
-(autoload 'tern-mode "tern.el" nil t)
+;; (add-to-list 'load-path "~/.emacs.d/elpa/tern/emacs/")
+;; (autoload 'tern-mode "tern.el" nil t)
 
 ;;; First, install tern with above code.
-(use-package company-tern
-  :ensure t
-  :init (add-to-list 'company-backends 'company-tern)
-  )
+;; (use-package company-tern
+;;   :ensure t
+;;   :init (add-to-list 'company-backends 'company-tern)
+;;   )
 
 ;;; Install indium. If indium is not working, check sudo npm install -g indium
 (unless (package-installed-p 'indium)
@@ -617,7 +633,7 @@ Including indent-buffer, which should not be called automatically on save."
   (add-hook 'web-mode-hook  'my-web-mode-hook)
   (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.jsp\\'" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.vue\\'" . web-mode))
+  ;; (add-to-list 'auto-mode-alist '("\\.vue\\'" . web-mode))
   )
 
 (use-package json-mode
@@ -666,7 +682,14 @@ Including indent-buffer, which should not be called automatically on save."
   :hook (lsp-mode . lsp-ui-mode)
   )
 
+(use-package lsp-treemacs
+  :ensure t
+  :after lsp-mode
+  )
+
+;; (straight-use-package '(company-lsp :type git :host github :repo "tigersoldier/company-lsp"))
 (use-package company-lsp
+  :straight (company-lsp :type git :host github :repo "tigersoldier/company-lsp")
   :ensure t
   :init
   (setq company-lsp-cache-candidates 'auto
@@ -675,7 +698,8 @@ Including indent-buffer, which should not be called automatically on save."
   (setq company-lsp-enable-snippet t)
   (setq company-lsp-enable-recompletion t)
   )
-(push 'company-lsp company-backends)
+;; (push 'company-lsp company-backends) 관련 내용은 아래 링크 참고
+;; https://emacs.stackexchange.com/questions/51812/company-lsp-complains-about-void-function-lsp-client-completion-in-comments
 
 ;;; java
 ;;; lsp-java
@@ -732,95 +756,6 @@ Including indent-buffer, which should not be called automatically on save."
 
   )
 
-
-(use-package jenkinsfile-mode
-  :ensure t
-  :mode "/Jenkinsfile\\'")
-
-
-(use-package yaml-mode
-  :ensure t
-  :mode "\\.ya?ml\\'")
-
-
-(use-package dockerfile-mode
-  :ensure t
-  :mode "/Dockerfile\\'")
-
-
-;;; dart mode.
-;;; need to install dart package. sudo pacman -Syu dart
-;;; when install flutter, it has dart-sdk internally.
-(use-package dart-mode
-  :ensure t
-  :init
-  (setq lsp-dart-sdk-dir "~/Workspaces/development/flutter/bin/cache/dart-sdk/"
-        lsp-dart-suggest-from-unimported-libraries nil
-        )
-  ;; (setq lsp-dart--server-command "pub global activate dart_language_server")
-  :hook
-  ((dart-mode . lsp))
-  :custom
-  (dart-format-on-save t)
-  )
-
-
-;;; flutter
-(use-package flutter
-  :after dart-mode
-  :ensure t
-  :init
-  (setq flutter-sdk-path "~/Workspaces/development/flutter/")
-  :bind
-  (:map dart-mode-map
-        ("C-M-x" . #'flutter-run-or-hot-reload)))
-
-;; ;; Optional
-;; (use-package flutter-l10n-flycheck
-;;   :after flutter
-;;   :ensure t
-;;   :config
-;;   (flutter-l10n-flycheck-setup))
-
-
-;;; go mode
-;; go get -u github.com/nsf/gocode
-;; go get -u golang.org/x/tools/...
-;; go get -u github.com/rogpeppe/godef
-(use-package go-mode
-  :ensure t
-  :init(progn
-         (use-package go-eldoc
-           :ensure t
-           )
-         )
-  (use-package gotest
-    :ensure t)
-  :hook
-  (
-   (go-mode . lsp)
-   (go-mode . (lambda ()
-                (setq-default)
-                (setq tab-width 4)
-                (setq standard-indent 4)
-                (setq indent-tabs-mode nil)
-                ))
-   )
-
-  :config
-  (setq exec-path (append exec-path '("~/Workspaces/development/go/bin")))
-  ;; (setq lsp-gopls-use-placeholders nil)
-  (exec-path-from-shell-copy-env "GOPATH")
-  (define-key go-mode-map (kbd "C-c f") 'go-test-current-file)
-  (define-key go-mode-map (kbd "C-c t") 'go-test-current-test)
-  (define-key go-mode-map (kbd "C-c p") 'go-test-current-project)
-  (define-key go-mode-map (kbd "C-c b") 'go-test-current-benchmark)
-  (define-key go-mode-map (kbd "C-c r") 'go-run)
-
-  (add-to-list 'lsp-file-watch-ignored "[/\\]vendor")
-  )
-
-
 ;; (use-package js-doc
 ;;   :ensure t
 ;;   :bind (:map js2-mode-map
@@ -829,26 +764,10 @@ Including indent-buffer, which should not be called automatically on save."
 ;; ("@" . js-doc-insert-tag)))
 
 
-;; (use-package pkgbuild-mode
-;;   :ensure t
-;;   :mode "/PKGBUILD\\'")
+;;; loading my  configuration
+(add-to-list 'load-path "~/.emacs.d/modules/")
 
-
-;;; markdown mode
-;; need to install pandoc first.
-(use-package markdown-mode
-  :ensure t
-  :commands (markdown-mode gfm-mode)
-  :mode (("README\\.md\\'" . gfm-mode)
-         ("\\.md\\'" . markdown-mode)
-         ("\\.markdown\\'" . markdown-mode))
-  :init (setq markdown-command "pandoc --from markdown --to html --ascii")
-  )
-
-
-;;;; requirement npm i -g vue-language-server
-;; (use-package vue-mode
-;;   :ensure t
-;;   :hook
-;;   (vue-mode . lsp)
-;;   )
+(require 'lang-vue)
+(require 'lang-go)
+(require 'lang-flutter)
+(require 'text-file-mode)
