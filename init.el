@@ -231,13 +231,11 @@ might be bad."
 Including indent-buffer, which should not be called automatically on save."
   (interactive)
 
-  (let ((x major-mode))
-    (if (eq x 'go-mode)
-        (gofmt)
-      (cleanup-buffer-safe)
-      (indent-buffer)
-      ;; (message "NoNoNo")
-      )
+  (cleanup-buffer-safe)
+  (indent-buffer)
+
+  (if (eq major-mode 'go-mode)
+      (gofmt)
     )
   )
 
@@ -366,6 +364,10 @@ Including indent-buffer, which should not be called automatically on save."
 (global-set-key (kbd "C-c C-b l") 'browse-url-to-my-local8100)
 (global-set-key (kbd "C-c C-b r") 'browse-url-to-redmine)
 (global-set-key (kbd "C-c C-b t") 'browse-url-to-mattermost)
+
+;; switch major mode
+(global-set-key (kbd "C-c c v") 'vue-mode)
+(global-set-key (kbd "C-c c w") 'web-mode)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; org mode
