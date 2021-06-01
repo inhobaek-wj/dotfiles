@@ -570,6 +570,9 @@ Including indent-buffer, which should not be called automatically on save."
 (use-package magit
   :ensure t
   :bind ("C-x g" . magit-status)
+
+  ;;; 이맥스가 기본적으로 제공하는 Git 백엔드를 켜두면 매우 느려진다. magit만 쓴다.
+  (setq vc-handled-backends nil)
   )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
