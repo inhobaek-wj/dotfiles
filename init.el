@@ -493,8 +493,13 @@ Including indent-buffer, which should not be called automatically on save."
         '(:eval (format " Projectile[%s]"
                         (projectile-project-name))))
   (setq projectile-globally-ignored-file-suffixes
-        '(".psd" ".png" ".fbx" ".anim" ".mat" ".meta" ".prefab" ".asset"
-          ".controller")))
+        '(".psd" ".png" ".fbx" ".anim" ".mat" ".meta" ".prefab" ".asset" ".min.js"
+          ".controller" ".jpg"))
+  (setq projectile-globally-ignored-directories
+        (append '(".DS_Store" ".git" ".svn" "out" "repl" "target" "dist" "lib" "node_modules" "libs" "deploy" "coverage" ".nuxt")
+                projectile-globally-ignored-directories))
+  (setq grep-find-ignored-directories (append '("dist" "deploy" "node_modules" "coverage" ".nuxt") grep-find-ignored-directories))
+  )
 
 ;;; helm
 ;;; https://github.com/emacs-helm/helm
@@ -570,7 +575,7 @@ Including indent-buffer, which should not be called automatically on save."
 (use-package magit
   :ensure t
   :bind ("C-x g" . magit-status)
-
+  :init
   ;;; 이맥스가 기본적으로 제공하는 Git 백엔드를 켜두면 매우 느려진다. magit만 쓴다.
   (setq vc-handled-backends nil)
   )
