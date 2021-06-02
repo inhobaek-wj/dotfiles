@@ -499,6 +499,20 @@ Including indent-buffer, which should not be called automatically on save."
         (append '(".DS_Store" ".git" ".svn" "out" "repl" "target" "dist" "lib" "node_modules" "libs" "deploy" "coverage" ".nuxt")
                 projectile-globally-ignored-directories))
   (setq grep-find-ignored-directories (append '("dist" "deploy" "node_modules" "coverage" ".nuxt") grep-find-ignored-directories))
+  :bind
+  ("C-c p f" . projectile-find-file)
+  ("C-c p 4 f" . projectile-find-file-other-window)
+  ("C-c p b" . projectile-switch-to-buffer)
+  ("C-c p 4 b" . projectile-switch-to-buffer-other-window)
+  ("C-c p D" . projectile-dired)
+  ("C-c p d" . projectile-find-dir)
+  ("C-c p j" . projectile-find-tag)
+  ("C-c p r" . projectile-replace)
+  ("C-c p o" . projectile-multi-occur)
+  ("C-c p s s" . counsel-projectile-ag)
+  ("C-c C-g" . counsel-projectile-rg)
+  ("C-c p I" . projectile-ibuffer)
+  ("C-c p p" . projectile-switch-project)
   )
 
 ;;; helm
