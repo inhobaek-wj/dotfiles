@@ -20,6 +20,10 @@
 ;; (unless (eq system-type 'windows-nt)
 ;;   (set-selection-coding-system 'utf-8))
 
+;; set keys for Apple keyboard, for emacs in OS X
+(setq mac-command-modifier 'meta) ; make cmd key do Meta
+(setq mac-option-modifier 'super) ; make opt key do Super
+;; (setq ns-function-modifier 'hyper)  ; make Fn key do Hyper
 
 ;;; emacs가 init.el에 추가하는 설정 방지
 ;;; (custom-set-variables ...
@@ -496,7 +500,7 @@ Including indent-buffer, which should not be called automatically on save."
         '(".psd" ".png" ".fbx" ".anim" ".mat" ".meta" ".prefab" ".asset" ".min.js"
           ".controller" ".jpg"))
   (setq projectile-globally-ignored-directories
-        (append '(".DS_Store" ".git" ".svn" "out" "repl" "target" "dist" "lib" "node_modules" "libs" "deploy" "coverage" ".nuxt")
+        (append '(".DS_Store" ".git" ".svn" "out" "repl" "target" "dist" "lib" "node_modules" "libs" "deploy" "coverage" ".nuxt" "log")
                 projectile-globally-ignored-directories))
   (setq grep-find-ignored-directories (append '("dist" "deploy" "node_modules" "coverage" ".nuxt") grep-find-ignored-directories))
   :bind
@@ -509,8 +513,6 @@ Including indent-buffer, which should not be called automatically on save."
   ("C-c p j" . projectile-find-tag)
   ("C-c p r" . projectile-replace)
   ("C-c p o" . projectile-multi-occur)
-  ("C-c p s s" . counsel-projectile-ag)
-  ("C-c C-g" . counsel-projectile-rg)
   ("C-c p I" . projectile-ibuffer)
   ("C-c p p" . projectile-switch-project)
   )
@@ -563,6 +565,8 @@ Including indent-buffer, which should not be called automatically on save."
            :commands (helm-projectile)
            :config
            (helm-projectile-on)
+           :bind
+           ("C-c h r" . helm-projectile-rg)
            )
          )
   )
@@ -622,7 +626,15 @@ Including indent-buffer, which should not be called automatically on save."
   (add-hook 'js2-mode-hook (lambda ()
                              (tern-mode)
                              (company-mode)))
+  (js2r-add-keybindings-with-prefix "C-c j")
   )
+
+(use-package js2-refactor
+  :ensure t
+  :init
+  (add-hook 'js2-mode-hook #'js2-refactor-mode)
+  )
+
 
 ;;; git clone https://github.com/ternjs/tern
 ;;; npm install
