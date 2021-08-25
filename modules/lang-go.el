@@ -28,7 +28,7 @@
   (exec-path-from-shell-copy-env "GOPATH")
   (define-key go-mode-map (kbd "C-c f") 'go-test-current-file)
   (define-key go-mode-map (kbd "C-c t") 'go-test-current-test)
-  (define-key go-mode-map (kbd "C-c p") 'go-test-current-project)
+  (define-key go-mode-map (kbd "C-c w") 'go-test-current-project)
   (define-key go-mode-map (kbd "C-c b") 'go-test-current-benchmark)
   (define-key go-mode-map (kbd "C-c r") 'go-run)
 
