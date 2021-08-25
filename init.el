@@ -268,6 +268,20 @@ Including indent-buffer, which should not be called automatically on save."
   (browse-url mattermost-url)
   )
 
+;; move line up
+(defun move-line-up ()
+  (interactive)
+  (transpose-lines 1)
+  (previous-line 2))
+
+;; move line down
+(defun move-line-down ()
+  (interactive)
+  (next-line 1)
+  (transpose-lines 1)
+  (previous-line 1))
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; UI setting
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -372,6 +386,10 @@ Including indent-buffer, which should not be called automatically on save."
 ;; switch major mode
 (global-set-key (kbd "C-c c v") 'vue-mode)
 (global-set-key (kbd "C-c c w") 'web-mode)
+
+;; move one line
+(global-set-key [(control shift n)] 'move-line-down)
+(global-set-key [(control shift p)] 'move-line-up)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; org mode
