@@ -489,6 +489,19 @@ Including indent-buffer, which should not be called automatically on save."
   (pdf-tools-install)
   )
 
+(use-package string-inflection
+  :ensure t
+  :init
+  ;; C-q C-u is similar to the keybinding used by Vz Editor.
+  (global-unset-key (kbd "C-q"))
+  :bind
+  ("C-q u" . string-inflection-underscore)
+  ("C-q l" . string-inflection-lower-camelcase)
+  ("C-q c" . string-inflection-camelcase)
+  ("C-q p" . string-inflection-pascal-case)
+  ("C-q k" . string-inflection-kebab-case)
+  )
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; programing related
