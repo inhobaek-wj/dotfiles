@@ -281,6 +281,46 @@ Including indent-buffer, which should not be called automatically on save."
   (transpose-lines 1)
   (previous-line 1))
 
+(defun make-test-file ()
+  "Find test file or make it"
+  (interactive)
+
+  (setq major-mode-to-string (format "%s" major-mode))
+
+  (setq buffer-name-with-file-type (split-string (buffer-name) "\\."))
+  (setq only-buffer-name (pop buffer-name-with-file-type))
+
+  (if (eq major-mode 'go-mode)
+      (minibuffer-with-setup-hook
+      (lambda () (insert only-buffer-name "_test.go"))
+    (call-interactively #'find-file))
+    )
+
+  (if (eq major-mode 'js2-mode)
+      (minibuffer-with-setup-hook
+      (lambda () (insert "__test__/" only-buffer-name ".test.js"))
+    (call-interactively #'find-file))
+    )
+
+  (if (eq major-mode 'js-mode)
+      (minibuffer-with-setup-hook
+      (lambda () (insert "__test__/" only-buffer-name ".test.js"))
+    (call-interactively #'find-file))
+    )
+
+  (if (eq major-mode 'css-mode)
+      (minibuffer-with-setup-hook
+      (lambda () (insert "__test__/" only-buffer-name ".test.js"))
+    (call-interactively #'find-file))
+    )
+
+  (if (string-match "vue" major-mode-to-string)
+      (minibuffer-with-setup-hook
+      (lambda () (insert "__test__/" only-buffer-name ".test.js"))
+    (call-interactively #'find-file))
+    )
+  )
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; UI setting
@@ -370,7 +410,7 @@ Including indent-buffer, which should not be called automatically on save."
 
 (global-set-key (kbd "C-c n") 'cleanup-buffer)
 
-;; for testing and debuging
+;; for testing and debuging in Java
 (global-set-key (kbd "C-c d c") 'dap-java-run-test-class)
 (global-set-key (kbd "C-c d m") 'dap-java-run-test-method)
 (global-set-key (kbd "M-g l") 'goto-global-linum)
@@ -390,6 +430,10 @@ Including indent-buffer, which should not be called automatically on save."
 ;; move one line
 (global-set-key [(control shift n)] 'move-line-down)
 (global-set-key [(control shift p)] 'move-line-up)
+
+;; 
+(global-set-key (kbd "C-c m t") 'make-test-file)
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; org mode
