@@ -293,31 +293,31 @@ Including indent-buffer, which should not be called automatically on save."
   (if (eq major-mode 'go-mode)
       (minibuffer-with-setup-hook
       (lambda () (insert only-buffer-name "_test.go"))
-    (call-interactively #'find-file))
+    (call-interactively #'find-file-other-window))
     )
 
   (if (eq major-mode 'js2-mode)
       (minibuffer-with-setup-hook
       (lambda () (insert "__test__/" only-buffer-name ".test.js"))
-    (call-interactively #'find-file))
+    (call-interactively #'find-file-other-window))
     )
 
   (if (eq major-mode 'js-mode)
       (minibuffer-with-setup-hook
       (lambda () (insert "__test__/" only-buffer-name ".test.js"))
-    (call-interactively #'find-file))
+    (call-interactively #'find-file-other-window))
     )
 
   (if (eq major-mode 'css-mode)
       (minibuffer-with-setup-hook
       (lambda () (insert "__test__/" only-buffer-name ".test.js"))
-    (call-interactively #'find-file))
+    (call-interactively #'find-file-other-window))
     )
 
   (if (string-match "vue" major-mode-to-string)
       (minibuffer-with-setup-hook
       (lambda () (insert "__test__/" only-buffer-name ".test.js"))
-    (call-interactively #'find-file))
+    (call-interactively #'find-file-other-window))
     )
   )
 
