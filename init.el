@@ -401,6 +401,8 @@ Including indent-buffer, which should not be called automatically on save."
 (global-set-key "\C-x\C-k" 'kill-region)
 (global-set-key "\C-c\C-k" 'kill-region)
 
+(global-set-key (kbd "C-x m") 'kmacro-keymap)
+
 (global-set-key (kbd "M-p") 'backward-paragraph)
 (global-set-key (kbd "M-n") 'forward-paragraph)
 
