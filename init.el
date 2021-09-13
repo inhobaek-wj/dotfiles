@@ -867,6 +867,7 @@ Including indent-buffer, which should not be called automatically on save."
 
 ;;; loading my  configuration
 (add-to-list 'load-path "~/.emacs.d/modules/")
+(load-file "~/.emacs.d/macros")
 
 (require 'lang-vue)
 (require 'lang-go)

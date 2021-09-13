@@ -1,0 +1,2 @@
+(fset 'user-story
+   (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ([65 100 backspace 115 32 97 32 44 32 73 32 119 97 110 116 121 backspace 32 44 32 115 111 32 116 97 backspace 104 97 116 1 134217830 134217830 6 24 113 134217830 134217830 6 24 113 5 32 24 113 10] 0 "Step %d of 5:")) arg)))
