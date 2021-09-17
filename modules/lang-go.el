@@ -25,7 +25,6 @@
   :config
   (setq exec-path (append exec-path '("~/Workspaces/development/go/bin")))
   ;; (setq lsp-gopls-use-placeholders nil)
-  (exec-path-from-shell-copy-env "GOPATH")
   (define-key go-mode-map (kbd "C-c f") 'go-test-current-file)
   (define-key go-mode-map (kbd "C-c t") 'go-test-current-test)
   (define-key go-mode-map (kbd "C-c w") 'go-test-current-project)
