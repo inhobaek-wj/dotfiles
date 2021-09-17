@@ -835,6 +835,14 @@ Including indent-buffer, which should not be called automatically on save."
   (dap-ui-mode t))
 (require 'dap-java)
 
+;; java compilation buffer color
+(require 'ansi-color)
+(defun my/ansi-colorize-buffer ()
+  (let ((buffer-read-only nil))
+    (ansi-color-apply-on-region (point-min) (point-max))))
+(add-hook 'compilation-filter-hook 'my/ansi-colorize-buffer)
+
+
 ;;; clojure
 (use-package cider
   :ensure t)
