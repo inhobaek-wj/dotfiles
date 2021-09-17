@@ -806,34 +806,17 @@ Including indent-buffer, which should not be called automatically on save."
 ;;; lsp-java
 (use-package lsp-java
   :ensure t
-  :after lsp
-  :init (progn
-          (require 'cc-mode)
-          (use-package projectile :ensure t)
-          (use-package hydra :ensure t)
-          (use-package dap-mode
-            :ensure t
-            :after lsp-mode
-            :config
-            (dap-mode t)
-            (dap-ui-mode t))
-          (use-package dap-java
-            :after (lsp-java)
-            )
-          )
-  :config
+  :init
   (setq lsp-java-vmargs
         (list
          "-noverify"
          "-Xmx1G"
          "-XX:+UseG1GC"
          "-XX:+UseStringDeduplication"
-         ;; "-javaagent:/Users/inho/.m2/repository/org/projectlombok/lombok/1.18.10/lombok.jar"
-         ;; "-Xbootclasspath/a:/Users/inho/.m2/repository/org/projectlombok/lombok/1.18.10/lombok.jar"
+         "-javaagent:/Users/inho/.m2/repository/org/projectlombok/lombok/1.18.12/lombok-1.18.12.jar"
          )
         )
-  (setq lsp-java-server-install-dir "/Users/inho/.emacs.d/eclipse.jdt.ls/server/")
-
+  :config
   (add-hook 'java-mode-hook 'lsp)
   (require 'lsp-java-boot)
   ;; to enable the lenses
@@ -843,6 +826,14 @@ Including indent-buffer, which should not be called automatically on save."
                               (setq c-basic-offset 4)))
   )
 
+(use-package hydra :ensure t)
+(use-package dap-mode
+  :ensure t
+  :after lsp-mode
+  :config
+  (dap-mode t)
+  (dap-ui-mode t))
+(require 'dap-java)
 
 ;;; clojure
 (use-package cider
