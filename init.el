@@ -816,6 +816,7 @@ Including indent-buffer, which should not be called automatically on save."
          "-javaagent:/Users/inho/.m2/repository/org/projectlombok/lombok/1.18.12/lombok-1.18.12.jar"
          )
         )
+  (setq lsp-java-completion-import-order ["com" "org" "java" "javax"])
   :config
   (add-hook 'java-mode-hook 'lsp)
   (require 'lsp-java-boot)
