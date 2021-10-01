@@ -691,6 +691,7 @@ Including indent-buffer, which should not be called automatically on save."
   (add-hook 'js2-mode-hook (lambda ()
                              (tern-mode)
                              (company-mode)))
+  (add-hook 'js2-mode-hook 'lsp)
   (js2r-add-keybindings-with-prefix "C-c j")
   )
 
