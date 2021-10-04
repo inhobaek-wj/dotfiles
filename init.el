@@ -857,6 +857,12 @@ Including indent-buffer, which should not be called automatically on save."
   )
 
 
+;;; feature-mode
+(use-package feature-mode
+  :ensure t
+  )
+
+
 ;;; loading my  configuration
 (add-to-list 'load-path "~/.emacs.d/modules/")
 (load-file "~/.emacs.d/macros")
