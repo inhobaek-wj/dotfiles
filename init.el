@@ -856,13 +856,6 @@ Including indent-buffer, which should not be called automatically on save."
 
   )
 
-;; (use-package js-doc
-;;   :ensure t
-;;   :bind (:map js2-mode-map
-;;               ;("C-c C-@" . js-doc-describe-tag)
-;;               ("C-c i"   . js-doc-insert-function-doc)
-;; ("@" . js-doc-insert-tag)))
-
 
 ;;; loading my  configuration
 (add-to-list 'load-path "~/.emacs.d/modules/")
