@@ -421,12 +421,12 @@ Including indent-buffer, which should not be called automatically on save."
 (global-set-key (kbd "M-g e") 'goto-code-from-error)
 
 ;; custom browse url
-(global-set-key (kbd "C-c C-b m") 'browse-url-to-my-github)
-(global-set-key (kbd "C-c C-b w") 'browse-url-to-work-github)
-(global-set-key (kbd "C-c C-b l") 'browse-url-to-my-local8100)
-(global-set-key (kbd "C-c C-b r") 'browse-url-to-redmine)
-(global-set-key (kbd "C-c C-b t") 'browse-url-to-mattermost)
-(global-set-key (kbd "C-c C-b b") 'browse-url-to-barae-karate-test-summary)
+(global-set-key (kbd "C-c e m") 'browse-url-to-my-github)
+(global-set-key (kbd "C-c e w") 'browse-url-to-work-github)
+(global-set-key (kbd "C-c e l") 'browse-url-to-my-local8100)
+(global-set-key (kbd "C-c e r") 'browse-url-to-redmine)
+(global-set-key (kbd "C-c e t") 'browse-url-to-mattermost)
+(global-set-key (kbd "C-c e b") 'browse-url-to-barae-karate-test-summary)
 
 ;; switch major mode
 (global-set-key (kbd "C-c c v") 'vue-mode)
