@@ -265,6 +265,11 @@ Including indent-buffer, which should not be called automatically on save."
   (browse-url mattermost-url)
   )
 
+(defun browse-url-to-barae-karate-test-summary ()
+  (interactive)
+  (browse-url "file:///Users/inho/Workspaces/barea/barae21API/target/karate-reports/karate-summary.html")
+  )
+
 ;; move line up
 (defun move-line-up ()
   (interactive)
@@ -421,6 +426,7 @@ Including indent-buffer, which should not be called automatically on save."
 (global-set-key (kbd "C-c C-b l") 'browse-url-to-my-local8100)
 (global-set-key (kbd "C-c C-b r") 'browse-url-to-redmine)
 (global-set-key (kbd "C-c C-b t") 'browse-url-to-mattermost)
+(global-set-key (kbd "C-c C-b b") 'browse-url-to-barae-karate-test-summary)
 
 ;; switch major mode
 (global-set-key (kbd "C-c c v") 'vue-mode)
@@ -800,6 +806,12 @@ Including indent-buffer, which should not be called automatically on save."
 ;; (push 'company-lsp company-backends) 관련 내용은 아래 링크 참고
 ;; https://emacs.stackexchange.com/questions/51812/company-lsp-complains-about-void-function-lsp-client-completion-in-comments
 
+(use-package helm-lsp
+  :ensure t
+  :after lsp-mode
+  )
+
+
 ;;; java
 ;;; lsp-java
 (use-package lsp-java
@@ -808,7 +820,7 @@ Including indent-buffer, which should not be called automatically on save."
   (setq lsp-java-vmargs
         (list
          "-noverify"
-         "-Xmx1G"
+         "-Xmx2G"
          "-XX:+UseG1GC"
          "-XX:+UseStringDeduplication"
          "-javaagent:/Users/inho/.m2/repository/org/projectlombok/lombok/1.18.12/lombok-1.18.12.jar"
