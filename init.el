@@ -234,6 +234,9 @@ Including indent-buffer, which should not be called automatically on save."
   (if (eq major-mode 'go-mode)
       (gofmt)
     )
+  (if (eq major-mode 'js2-mode)
+      (lsp-format-buffer)
+    )
   )
 
 (defun browse-url-to-barae-karate-test-summary ()
