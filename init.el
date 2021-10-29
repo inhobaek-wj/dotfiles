@@ -119,10 +119,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (setq global-line-num 0)
-(setq my-github-url "https://github.com/inhobaek-wj")
-(setq work-git-url "http://git.aiotholdings.com")
-(setq redmine-url "http://redmine.aiotholdings.com")
-(setq mattermost-url "http://mattermost.aiotholdings.com")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; custom functions
@@ -238,31 +234,6 @@ Including indent-buffer, which should not be called automatically on save."
   (if (eq major-mode 'go-mode)
       (gofmt)
     )
-  )
-
-(defun browse-url-to-my-github ()
-  (interactive)
-  (browse-url my-github-url)
-  )
-
-(defun browse-url-to-work-github ()
-  (interactive)
-  (browse-url work-git-url)
-  )
-
-(defun browse-url-to-my-local8100 ()
-  (interactive)
-  (browse-url my-local8100-url)
-  )
-
-(defun browse-url-to-redmine ()
-  (interactive)
-  (browse-url redmine-url)
-  )
-
-(defun browse-url-to-mattermost ()
-  (interactive)
-  (browse-url mattermost-url)
   )
 
 (defun browse-url-to-barae-karate-test-summary ()
@@ -421,11 +392,6 @@ Including indent-buffer, which should not be called automatically on save."
 (global-set-key (kbd "M-g e") 'goto-code-from-error)
 
 ;; custom browse url
-(global-set-key (kbd "C-c e m") 'browse-url-to-my-github)
-(global-set-key (kbd "C-c e w") 'browse-url-to-work-github)
-(global-set-key (kbd "C-c e l") 'browse-url-to-my-local8100)
-(global-set-key (kbd "C-c e r") 'browse-url-to-redmine)
-(global-set-key (kbd "C-c e t") 'browse-url-to-mattermost)
 (global-set-key (kbd "C-c e b") 'browse-url-to-barae-karate-test-summary)
 
 ;; switch major mode
