@@ -520,6 +520,12 @@ Including indent-buffer, which should not be called automatically on save."
   ("C-q k" . string-inflection-kebab-case)
   )
 
+;; earmuffs 컨벤션을 쓰는 파일과 상관없는 버퍼는 안 보게 설정.
+(add-hook 'ibuffer-mode-hook
+          '(lambda ()
+             (ibuffer-auto-mode 1)
+             (add-to-list 'ibuffer-never-show-predicates "^\\*")))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; programing related
