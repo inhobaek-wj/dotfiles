@@ -658,6 +658,9 @@ Including indent-buffer, which should not be called automatically on save."
 
 ;;; javascript
 ;;; https://github.com/mooz/js2-mode
+(use-package prettier-js
+    :ensure t)
+
 (use-package js2-mode
   :ensure t
   :config
@@ -666,10 +669,8 @@ Including indent-buffer, which should not be called automatically on save."
   (setq js2-basic-offset 2)
 
   (add-hook 'js2-mode-hook #'js2-imenu-extras-mode) ;; better imenu.
-  (add-hook 'js2-mode-hook (lambda ()
-                             (tern-mode)
-                             (company-mode)))
   (add-hook 'js2-mode-hook 'lsp)
+  (add-hook 'js2-mode-hook 'prettier-js-mode)
   (js2r-add-keybindings-with-prefix "C-c j")
   )
 
@@ -678,6 +679,8 @@ Including indent-buffer, which should not be called automatically on save."
   :init
   (add-hook 'js2-mode-hook #'js2-refactor-mode)
   )
+
+
 
 
 ;;; git clone https://github.com/ternjs/tern
