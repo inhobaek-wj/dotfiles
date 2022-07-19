@@ -244,6 +244,12 @@ Including indent-buffer, which should not be called automatically on save."
   (browse-url "file:///Users/inho/Workspaces/barea/barae21API/target/karate-reports/karate-summary.html")
   )
 
+(defun browse-url-to-correct-korean ()
+  (interactive)
+  (browse-url "http://speller.cs.pusan.ac.kr/")
+  )
+
+
 ;; move line up
 (defun move-line-up ()
   (interactive)
@@ -396,6 +402,7 @@ Including indent-buffer, which should not be called automatically on save."
 
 ;; custom browse url
 (global-set-key (kbd "C-c e b") 'browse-url-to-barae-karate-test-summary)
+(global-set-key (kbd "C-c e c") 'browse-url-to-correct-korean)
 
 ;; switch major mode
 (global-set-key (kbd "C-c c v") 'vue-mode)
