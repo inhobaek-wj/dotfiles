@@ -861,3 +861,4 @@ Including indent-buffer, which should not be called automatically on save."
 (require 'lang-go)
 (require 'lang-flutter)
 (require 'text-file-mode)
+(require 'lang-ruby)
