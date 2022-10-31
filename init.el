@@ -349,11 +349,13 @@ Including indent-buffer, which should not be called automatically on save."
   )
 
 (use-package color-theme-sanityinc-tomorrow
-  :defer t)
+  :ensure t)
 
 (use-package heroku-theme
-  :defer t)
+  :ensure t)
 
+(use-package material-theme
+  :ensure t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; custom alias
