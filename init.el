@@ -443,11 +443,11 @@ Including indent-buffer, which should not be called automatically on save."
   ;;  ("C-c p" . mc/mark-previous-like-this))
   )
 
-(use-package autopair
-  :ensure t
-  :init
-  (autopair-global-mode)
-  )
+;; (use-package autopair
+;;   :ensure t
+;;   :init
+;;   (autopair-global-mode)
+;;   )
 ;; (use-package smartparens
 ;;   :defer)
 
@@ -513,11 +513,11 @@ Including indent-buffer, which should not be called automatically on save."
 
 ;;; pdf-tools
 ;; https://github.com/politza/pdf-tools
-(use-package pdf-tools
-  :ensure t
-  :init
-  (pdf-tools-install)
-  )
+;; (use-package pdf-tools
+;;   :ensure t
+;;   :init
+;;   (pdf-tools-install)
+;;   )
 
 (use-package string-inflection
   :ensure t
