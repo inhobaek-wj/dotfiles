@@ -315,7 +315,8 @@ Including indent-buffer, which should not be called automatically on save."
 ;; 커서가 있는 라인 하이라이트
 (global-hl-line-mode t)
 ;; turn on line number
-(global-linum-mode t)
+;; (global-linum-mode t)
+(global-display-line-numbers-mode t)
 
 (global-auto-revert-mode 1)
 
