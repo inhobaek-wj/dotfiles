@@ -596,7 +596,6 @@ Including indent-buffer, which should not be called automatically on save."
   (helm-autoresize-mode 1)
 
   :init(progn
-         (require 'helm-config)
          (helm-mode 1)
 
          (use-package helm-ag
