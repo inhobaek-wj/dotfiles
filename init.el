@@ -101,9 +101,18 @@
 (delete-selection-mode t)
 ;; word-wrap
 (global-visual-line-mode t)
-
 ;; beep sound off
 (setq visible-bell 1)
+;; autocomplete paired
+(electric-pair-mode 1)
+(setq electric-pair-pairs
+      '(
+        (?\{ . ?\})
+        (?\' . ?\')
+        (?\< . ?\>)
+        (?\` . ?\`)
+        )
+      )
 
 ;;; environment variables
 (use-package exec-path-from-shell
@@ -442,14 +451,6 @@ Including indent-buffer, which should not be called automatically on save."
   ;; (("C-c n" . mc/mark-next-like-this)
   ;;  ("C-c p" . mc/mark-previous-like-this))
   )
-
-;; (use-package autopair
-;;   :ensure t
-;;   :init
-;;   (autopair-global-mode)
-;;   )
-;; (use-package smartparens
-;;   :defer)
 
 (use-package delight
   :ensure t)
