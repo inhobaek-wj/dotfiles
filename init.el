@@ -123,6 +123,7 @@
 (when (memq window-system '(mac ns x))
   (exec-path-from-shell-initialize))
 
+;; custom global variables for m1 complie
 (setenv "LIBRARY_PATH" "/opt/homebrew/opt/gcc/lib/gcc/12:/opt/homebrew/opt/libgccjit/lib/gcc/12:/opt/homebrew/opt/gcc/lib/gcc/12/gcc/aarch64-apple-darwin21/12")
 
 (when (eq system-type 'darwin) (customize-set-variable 'native-comp-driver-options '("-Wl,-w")))
@@ -868,8 +869,8 @@ Including indent-buffer, which should not be called automatically on save."
 
 
 ;;; loading my  configuration
-(add-to-list 'load-path "~/.emacs.d/modules/")
-(load-file "~/.emacs.d/macros")
+(add-to-list 'load-path "~/.config/emacs/modules/")
+(load-file "~/.config/emacs/macros")
 
 (require 'lang-vue)
 (require 'lang-go)
