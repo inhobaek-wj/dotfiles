@@ -101,9 +101,18 @@
 (delete-selection-mode t)
 ;; word-wrap
 (global-visual-line-mode t)
-
 ;; beep sound off
 (setq visible-bell 1)
+;; autocomplete paired
+(electric-pair-mode 1)
+(setq electric-pair-pairs
+      '(
+        (?\{ . ?\})
+        (?\' . ?\')
+        (?\< . ?\>)
+        (?\` . ?\`)
+        )
+      )
 
 ;;; environment variables
 (use-package exec-path-from-shell
@@ -113,6 +122,11 @@
   )
 (when (memq window-system '(mac ns x))
   (exec-path-from-shell-initialize))
+
+;; custom global variables for m1 complie
+(setenv "LIBRARY_PATH" "/opt/homebrew/opt/gcc/lib/gcc/12:/opt/homebrew/opt/libgccjit/lib/gcc/12:/opt/homebrew/opt/gcc/lib/gcc/12/gcc/aarch64-apple-darwin21/12")
+
+(when (eq system-type 'darwin) (customize-set-variable 'native-comp-driver-options '("-Wl,-w")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; custom global variables
@@ -313,7 +327,8 @@ Including indent-buffer, which should not be called automatically on save."
 ;; 커서가 있는 라인 하이라이트
 (global-hl-line-mode t)
 ;; turn on line number
-(global-linum-mode t)
+;; (global-linum-mode t)
+(global-display-line-numbers-mode t)
 
 (global-auto-revert-mode 1)
 
@@ -439,14 +454,6 @@ Including indent-buffer, which should not be called automatically on save."
   ;; (("C-c n" . mc/mark-next-like-this)
   ;;  ("C-c p" . mc/mark-previous-like-this))
   )
-
-(use-package autopair
-  :ensure t
-  :init
-  (autopair-global-mode)
-  )
-;; (use-package smartparens
-;;   :defer)
 
 (use-package delight
   :ensure t)
@@ -585,7 +592,6 @@ Including indent-buffer, which should not be called automatically on save."
   (helm-autoresize-mode 1)
 
   :init(progn
-         (require 'helm-config)
          (helm-mode 1)
 
          (use-package helm-ag
@@ -855,8 +861,8 @@ Including indent-buffer, which should not be called automatically on save."
 
 
 ;;; loading my  configuration
-(add-to-list 'load-path "~/.emacs.d/modules/")
-(load-file "~/.emacs.d/macros")
+(add-to-list 'load-path "~/.config/emacs/modules/")
+(load-file "~/.config/emacs/macros")
 
 (require 'lang-vue)
 (require 'lang-go)
