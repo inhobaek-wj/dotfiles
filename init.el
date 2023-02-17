@@ -515,14 +515,6 @@ Including indent-buffer, which should not be called automatically on save."
   (setq flycheck-check-syntax-automatically '(save idle-change mode-enabled)
         flycheck-idle-change-delay 5.0))
 
-;;; pdf-tools
-;; https://github.com/politza/pdf-tools
-;; (use-package pdf-tools
-;;   :ensure t
-;;   :init
-;;   (pdf-tools-install)
-;;   )
-
 (use-package string-inflection
   :ensure t
   :init
