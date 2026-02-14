@@ -30,27 +30,11 @@
 ;;; https://jamiecollinson.com/blog/my-emacs-config/
 (setq custom-file (make-temp-file "emacs-custom"))
 
-;;; Bootstrap straight.el
-(setq package-enable-at-startup nil)
-
-(defvar bootstrap-version)
-(let ((bootstrap-file
-       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-      (bootstrap-version 5))
-  (unless (file-exists-p bootstrap-file)
-    (with-current-buffer
-        (url-retrieve-synchronously
-         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-         'silent 'inhibit-cookies)
-      (goto-char (point-max))
-      (eval-print-last-sexp)))
-  (load bootstrap-file nil 'nomessage))
-
 ;;; packages
 (require 'package)
-(add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/") t)
-(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
-(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
+(add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/") t)
+(add-to-list 'package-archives '("nongnu" . "https://elpa.nongnu.org/nongnu/") t)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (package-initialize)
 (when (not (package-installed-p 'use-package))
   (package-refresh-contents)
@@ -448,6 +432,7 @@ Including indent-buffer, which should not be called automatically on save."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package multiple-cursors
+  :ensure t
   ;; :bind
   ;; (("C-c n" . mc/mark-next-like-this)
   ;;  ("C-c p" . mc/mark-previous-like-this))
@@ -580,7 +565,7 @@ Including indent-buffer, which should not be called automatically on save."
   (progn
     (global-set-key (kbd "C-c h") 'helm-command-prefix)
     (global-unset-key (kbd "C-x c"))
-    (global-set-key (kbd "C-c h s") 'helm-do-ag)
+    (global-set-key (kbd "C-c h s") 'helm-do-grep-ag)
     (global-set-key (kbd "C-c h o") 'helm-occur))
   (setq helm-split-window-inside-p t
         helm-M-x-fuzzy-match t
@@ -592,21 +577,7 @@ Including indent-buffer, which should not be called automatically on save."
   :init(progn
          (helm-mode 1)
 
-         (use-package helm-ag
-           :ensure t
-           )
-
-         (use-package helm-swoop
-           :ensure t
-           :bind
-           (("M-i" . helm-swoop)
-            ("M-I" . helm-swoop-back-to-last-point)
-            ("C-c M-i" . helm-multi-swoop)
-            ("C-x M-i" . helm-multi-swoop-all)
-            :map
-            helm-swoop-map
-            ("M-i" . helm-multi-swoop-all-from-helm-swoop)
-            ("M-m" . helm-multi-swoop-current-mode-from-helm-swoop)))
+         (global-set-key (kbd "M-i") 'helm-occur)
 
          (use-package helm-projectile
            :ensure t
@@ -676,13 +647,14 @@ Including indent-buffer, which should not be called automatically on save."
   (add-hook 'js2-mode-hook #'js2-imenu-extras-mode) ;; better imenu.
   (add-hook 'js2-mode-hook 'lsp)
   (add-hook 'js2-mode-hook 'prettier-js-mode)
-  (js2r-add-keybindings-with-prefix "C-c j")
   )
 
 (use-package js2-refactor
   :ensure t
   :init
   (add-hook 'js2-mode-hook #'js2-refactor-mode)
+  :config
+  (js2r-add-keybindings-with-prefix "C-c j")
   )
 
 
@@ -700,9 +672,10 @@ Including indent-buffer, which should not be called automatically on save."
 ;;   )
 
 ;;; Install indium. If indium is not working, check sudo npm install -g indium
-(unless (package-installed-p 'indium)
-  (package-install 'indium))
-(setq indium-chrome-executable "chrome")
+(use-package indium
+  :ensure t
+  :config
+  (setq indium-chrome-executable "chrome"))
 
 
 ;;; Web
@@ -737,7 +710,7 @@ Including indent-buffer, which should not be called automatically on save."
 
 (use-package lsp-mode
   :init
-  (setq lsp-prefer-flymake nil)
+  (setq lsp-diagnostics-provider :flycheck)
   :ensure t
   :commands lsp
   :config
@@ -774,20 +747,6 @@ Including indent-buffer, which should not be called automatically on save."
   :ensure t
   :after lsp-mode
   )
-
-;; (straight-use-package '(company-lsp :type git :host github :repo "tigersoldier/company-lsp"))
-(use-package company-lsp
-  :straight (company-lsp :type git :host github :repo "tigersoldier/company-lsp")
-  :ensure t
-  :init
-  (setq company-lsp-cache-candidates 'auto
-        company-lsp-filter-candidates t)
-  (setq company-lsp-async t)
-  (setq company-lsp-enable-snippet t)
-  (setq company-lsp-enable-recompletion t)
-  )
-;; (push 'company-lsp company-backends) 관련 내용은 아래 링크 참고
-;; https://emacs.stackexchange.com/questions/51812/company-lsp-complains-about-void-function-lsp-client-completion-in-comments
 
 (use-package helm-lsp
   :ensure t
