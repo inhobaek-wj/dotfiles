@@ -103,9 +103,8 @@
   :ensure t
   :config
   (setq exec-path-from-shell-arguments nil)
-  )
-(when (memq window-system '(mac ns x))
-  (exec-path-from-shell-initialize))
+  (when (memq window-system '(mac ns x))
+    (exec-path-from-shell-initialize)))
 
 ;; LIBRARY_PATH for native-comp is set in early-init.el
 (when (eq system-type 'darwin) (customize-set-variable 'native-comp-driver-options '("-Wl,-w")))
@@ -404,8 +403,8 @@ Including indent-buffer, which should not be called automatically on save."
 (global-set-key (kbd "C-c e c") 'browse-url-to-correct-korean)
 
 ;; switch major mode
-(global-set-key (kbd "C-c c v") 'vue-mode)
-(global-set-key (kbd "C-c c w") 'web-mode)
+(global-set-key (kbd "C-c v v") 'vue-mode)
+(global-set-key (kbd "C-c v w") 'web-mode)
 
 ;; move one line
 (global-set-key [(control shift n)] 'move-line-down)
@@ -613,8 +612,8 @@ Including indent-buffer, which should not be called automatically on save."
   :ensure t
   :bind ("C-x g" . magit-status)
   :init
-  ;;; 이맥스가 기본적으로 제공하는 Git 백엔드를 켜두면 매우 느려진다. magit만 쓴다.
-  (setq vc-handled-backends nil)
+  ;;; Git만 남기고 나머지 VC 백엔드 비활성화. :vc 패키지 설치에 Git 백엔드 필요.
+  (setq vc-handled-backends '(Git))
   )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -815,6 +814,30 @@ Including indent-buffer, which should not be called automatically on save."
 (use-package feature-mode
   :ensure t
   )
+
+
+;;; claude-code
+(use-package inheritenv
+  :vc (:url "https://github.com/purcell/inheritenv" :rev :newest)
+  :ensure t)
+
+(use-package vterm
+  :ensure t)
+
+(use-package monet
+  :vc (:url "https://github.com/stevemolitor/monet" :rev :newest)
+  :ensure t)
+
+(use-package claude-code
+  :vc (:url "https://github.com/stevemolitor/claude-code.el" :rev :newest)
+  :ensure t
+  :config
+  (setq claude-code-terminal-backend 'vterm)
+  (add-hook 'claude-code-process-environment-functions
+            #'monet-start-server-function)
+  (monet-mode 1)
+  (claude-code-mode)
+  :bind-keymap ("C-c c" . claude-code-command-map))
 
 
 ;;; loading my  configuration
