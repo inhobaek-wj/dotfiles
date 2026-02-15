@@ -372,7 +372,6 @@ Including indent-buffer, which should not be called automatically on save."
 
 ;; M-x == C-x/C-m
 (global-set-key "\C-x\C-m" 'execute-extended-command)
-(global-set-key "\C-c\C-m" 'execute-extended-command)
 
 ;; ibuffer-mode
 (global-set-key (kbd "C-x C-b") 'ibuffer)
@@ -567,6 +566,7 @@ Including indent-buffer, which should not be called automatically on save."
     (global-set-key (kbd "C-c h s") 'helm-do-grep-ag)
     (global-set-key (kbd "C-c h o") 'helm-occur))
   (setq helm-split-window-inside-p t
+        helm-move-to-line-cycle-in-source nil
         helm-M-x-fuzzy-match t
         helm-buffers-fuzzy-matching t
         helm-recentf-fuzzy-match t
@@ -822,7 +822,13 @@ Including indent-buffer, which should not be called automatically on save."
   :ensure t)
 
 (use-package vterm
-  :ensure t)
+  :ensure t
+  :config
+  (add-hook 'vterm-copy-mode-hook
+            (lambda ()
+              (if vterm-copy-mode
+                  (setq-local cursor-type 'box)
+                (setq-local cursor-type nil)))))
 
 (use-package monet
   :vc (:url "https://github.com/stevemolitor/monet" :rev :newest)
