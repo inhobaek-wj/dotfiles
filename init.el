@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t -*-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; default setting
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -102,7 +103,6 @@
 (use-package exec-path-from-shell
   :ensure t
   :config
-  (setq exec-path-from-shell-arguments nil)
   (when (memq window-system '(mac ns x))
     (exec-path-from-shell-initialize)))
 
@@ -298,6 +298,102 @@ Including indent-buffer, which should not be called automatically on save."
     )
   )
 
+(defun find-package-json-root ()
+  "Find the nearest directory containing package.json"
+  (let ((current-dir (file-name-directory (or (buffer-file-name) default-directory))))
+    (locate-dominating-file current-dir "package.json")))
+
+(defun run-js-test-file ()
+  "Run tests for the current file"
+  (interactive)
+  (let* ((package-root (find-package-json-root))
+         (file-name (buffer-file-name))
+         (relative-path (file-relative-name file-name package-root))
+         (is-cypress (string-match-p "\\.cy\\.[jt]sx?$" file-name))
+         (default-directory package-root)
+         (test-command (if is-cypress
+                           (format "npm run test:e2e -- --spec '%s'" relative-path)
+                         (format "npm test -- %s" relative-path))))
+    (compile test-command)))
+
+(defun run-js-test-all ()
+  "Run all tests in the project"
+  (interactive)
+  (let* ((default-directory (find-package-json-root))
+         (file-name (buffer-file-name))
+         (is-cypress (and file-name (string-match-p "\\.cy\\.[jt]sx?$" file-name)))
+         (test-command (if is-cypress "npm run test:e2e" "npm test")))
+    (compile test-command)))
+
+(defun toggle-test-only ()
+  "Toggle .only() on the current describe or it block"
+  (interactive)
+  (save-excursion
+    (let ((line-text (thing-at-point 'line t)))
+      (beginning-of-line)
+      (if (string-match "\\(describe\\|it\\|test\\)\\(\\.only\\)?(" line-text)
+          (if (match-string 2 line-text)
+              ;; Remove .only
+              (progn
+                (search-forward ".only" (line-end-position) t)
+                (replace-match ""))
+            ;; Add .only
+            (progn
+              (search-forward-regexp "\\(describe\\|it\\|test\\)(" (line-end-position) t)
+              (goto-char (match-beginning 0))
+              (search-forward-regexp "\\(describe\\|it\\|test\\)" (line-end-position) t)
+              (insert ".only")))
+        (message "Not on a describe/it/test line")))))
+
+(defun run-current-test-block ()
+  "Add .only to current test block, run tests, then remove .only when compilation finishes"
+  (interactive)
+  (let ((original-point (point))
+        (target-buffer (current-buffer))
+        (modified nil))
+    (save-excursion
+      ;; Find the current describe or it block
+      (beginning-of-line)
+      (unless (looking-at ".*\\(describe\\|it\\|test\\)(")
+        (search-backward-regexp "^[[:space:]]*\\(describe\\|it\\|test\\)(" nil t))
+
+      ;; Add .only if not already there
+      (let ((line-text (thing-at-point 'line t)))
+        (when (and (string-match "\\(describe\\|it\\|test\\)(" line-text)
+                   (not (string-match "\\.only(" line-text)))
+          (beginning-of-line)
+          (search-forward-regexp "\\(describe\\|it\\|test\\)(" (line-end-position) t)
+          (goto-char (match-beginning 0))
+          (search-forward-regexp "\\(describe\\|it\\|test\\)" (line-end-position) t)
+          (insert ".only")
+          (setq modified t))))
+
+    ;; Save and run tests
+    (when modified
+      (save-buffer)
+
+      ;; Set up a one-time hook to remove .only when compilation finishes
+      (let ((buf target-buffer)
+            (pt original-point)
+            (cleanup-fn nil))
+        (setq cleanup-fn
+              (lambda (buffer status)
+                (when (buffer-live-p buf)
+                  (with-current-buffer buf
+                    (save-excursion
+                      (goto-char pt)
+                      (beginning-of-line)
+                      (unless (looking-at ".*\\(describe\\|it\\|test\\)\\.only(")
+                        (search-backward-regexp "^[[:space:]]*\\(describe\\|it\\|test\\)\\.only(" nil t))
+                      (when (search-forward ".only" (line-end-position) t)
+                        (replace-match "")
+                        (save-buffer)))))
+                ;; Remove this hook after running once
+                (remove-hook 'compilation-finish-functions cleanup-fn)))
+
+        (add-hook 'compilation-finish-functions cleanup-fn)
+        (run-js-test-file)))))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; UI setting
@@ -411,6 +507,12 @@ Including indent-buffer, which should not be called automatically on save."
 
 ;;
 (global-set-key (kbd "C-c m t") 'make-test-file)
+
+;; run tests
+(global-set-key (kbd "C-c t f") 'run-js-test-file)
+(global-set-key (kbd "C-c t a") 'run-js-test-all)
+(global-set-key (kbd "C-c t t") 'run-current-test-block)
+(global-set-key (kbd "C-c t o") 'toggle-test-only)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -645,7 +747,7 @@ Including indent-buffer, which should not be called automatically on save."
 
   (add-hook 'js2-mode-hook #'js2-imenu-extras-mode) ;; better imenu.
   (add-hook 'js2-mode-hook 'lsp)
-  (add-hook 'js2-mode-hook 'prettier-js-mode)
+  (add-hook 'js2-mode-hook 'prettier-js-mode)  ;; if error, run: npm install -g prettier
   )
 
 (use-package js2-refactor
