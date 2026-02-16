@@ -33,3 +33,12 @@ straight/
 transient/
 
 workspace/
+
+# Tree-sitter compiled grammars
+tree-sitter/
+
+# Native compilation cache
+eln-cache/
+
+# Projectile projects list
+projects
