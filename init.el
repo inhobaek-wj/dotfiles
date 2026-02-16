@@ -855,3 +855,4 @@ Including indent-buffer, which should not be called automatically on save."
 (require 'lang-flutter)
 (require 'text-file-mode)
 (require 'lang-ruby)
+(require 'lang-react)
