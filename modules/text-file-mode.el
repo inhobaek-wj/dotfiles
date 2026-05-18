@@ -18,6 +18,9 @@
          ("\\.md\\'" . markdown-mode)
          ("\\.markdown\\'" . markdown-mode))
   :init (setq markdown-command "pandoc --from markdown --to html --ascii")
+  :bind (:map markdown-mode-map
+              ("M-p" . backward-paragraph)
+              ("M-n" . forward-paragraph))
   )
 
 ;;; jenkinsfile mode
