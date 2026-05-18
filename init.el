@@ -325,6 +325,12 @@ Including indent-buffer, which should not be called automatically on save."
          (test-command (if is-cypress "npm run test:e2e" "npm test")))
     (compile test-command)))
 
+(defun run-cypress-test-all ()
+  "Run all Cypress e2e tests in the project"
+  (interactive)
+  (let ((default-directory (find-package-json-root)))
+    (compile "npm run test:e2e")))
+
 (defun toggle-test-only ()
   "Toggle .only() on the current describe or it block"
   (interactive)
@@ -473,8 +479,17 @@ Including indent-buffer, which should not be called automatically on save."
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 
 (global-set-key "\C-w" 'backward-kill-word)
-(global-set-key "\C-x\C-k" 'kill-region)
-(global-set-key "\C-c\C-k" 'kill-region)
+
+;; Smart kill-region that uses kill-ring-save in read-only buffers
+(defun my-smart-kill-region (beg end &optional region)
+  "Kill region, but use kill-ring-save in read-only buffers."
+  (interactive (list (mark) (point) 'region))
+  (if buffer-read-only
+      (kill-ring-save beg end region)
+    (kill-region beg end region)))
+
+(global-set-key "\C-x\C-k" 'my-smart-kill-region)
+(global-set-key "\C-c\C-k" 'my-smart-kill-region)
 
 (global-set-key (kbd "C-x m") 'kmacro-keymap)
 
@@ -511,6 +526,7 @@ Including indent-buffer, which should not be called automatically on save."
 ;; run tests
 (global-set-key (kbd "C-c t f") 'run-js-test-file)
 (global-set-key (kbd "C-c t a") 'run-js-test-all)
+(global-set-key (kbd "C-c t c") 'run-cypress-test-all)
 (global-set-key (kbd "C-c t t") 'run-current-test-block)
 (global-set-key (kbd "C-c t o") 'toggle-test-only)
 
