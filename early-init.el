@@ -16,3 +16,7 @@
            "/opt/homebrew/Cellar/gcc/15.2.0_1/lib/gcc/current/gcc/aarch64-apple-darwin25/15"
            "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib")
          ":"))
+
+;; native-comp: don't pop up the *Warnings* buffer for async compilation.
+;; Warnings are still logged, and real errors still surface.
+(setq native-comp-async-report-warnings-errors 'silent)

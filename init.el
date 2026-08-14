@@ -590,11 +590,6 @@ Including indent-buffer, which should not be called automatically on save."
 (use-package counsel
   :ensure t)
 
-(use-package counsel-projectile
-  :ensure t
-  :init
-  (counsel-projectile-mode))
-
 (use-package which-key
   :ensure t
   :diminish which-key-mode
@@ -646,9 +641,8 @@ Including indent-buffer, which should not be called automatically on save."
 (use-package projectile
   :ensure t
   :delight '(:eval (concat " [" (projectile-project-name) "]"))
-  :init
-  (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
   :config
+  (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
   (projectile-mode)
   (setq projectile-enable-caching t
         projectile-indexing-method 'alien
