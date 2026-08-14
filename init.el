@@ -974,6 +974,10 @@ The result is expanded so that \"~/\" and \"/Users/me/\" group together."
 (use-package vterm
   :ensure t
   :config
+  ;; 기본값 1000줄이라 claude 대화가 금방 잘린다.
+  ;; 100000은 vterm-module.h의 SB_MAX와 같은 최대값.
+  ;; 터미널 생성 시점에 읽으므로 버퍼를 새로 만들어야 적용된다.
+  (setq vterm-max-scrollback 100000)
   (add-hook 'vterm-copy-mode-hook
             (lambda ()
               (if vterm-copy-mode
@@ -984,11 +988,21 @@ The result is expanded so that \"~/\" and \"/Users/me/\" group together."
   :vc (:url "https://github.com/stevemolitor/monet" :rev :newest)
   :ensure t)
 
+;; 전체화면 TUI는 alternate screen(ESC[?1049h)을 써서 vterm에 스크롤백이
+;; 전혀 쌓이지 않는다(버퍼가 터미널 높이에 고정됨).
+;; alternate screen만 끄면 색상과 UI는 그대로 두고 지난 대화가 남는다.
+(defun my-claude-code-disable-alternate-screen (&rest _)
+  "Return env vars keeping Claude off the terminal's alternate screen.
+Claude's fullscreen TUI otherwise leaves vterm with no scrollback."
+  '("CLAUDE_CODE_DISABLE_ALTERNATE_SCREEN=1"))
+
 (use-package claude-code
   :vc (:url "https://github.com/stevemolitor/claude-code.el" :rev :newest)
   :ensure t
   :config
   (setq claude-code-terminal-backend 'vterm)
+  (add-hook 'claude-code-process-environment-functions
+            #'my-claude-code-disable-alternate-screen)
   (add-hook 'claude-code-process-environment-functions
             #'monet-start-server-function)
   (monet-mode 1)
