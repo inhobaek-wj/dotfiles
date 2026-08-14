@@ -622,11 +622,14 @@ Including indent-buffer, which should not be called automatically on save."
   ("C-q k" . string-inflection-kebab-case)
   )
 
-;; earmuffs 컨벤션을 쓰는 파일과 상관없는 버퍼는 안 보게 설정.
+;; C-x b(helm-mini)와 같은 버퍼 목록을 Ibuffer에서도 보이게 설정.
+;; helm이 숨기는 내부 버퍼(helm-boring-buffer-regexp-list)만 동일하게 제외한다.
+(setq ibuffer-never-show-predicates
+      '("\\`\\*helm" "\\`\\*Echo Area" "\\`\\*Minibuf"))
+
 (add-hook 'ibuffer-mode-hook
-          '(lambda ()
-             (ibuffer-auto-mode 1)
-             (add-to-list 'ibuffer-never-show-predicates "^\\*")))
+          (lambda ()
+            (ibuffer-auto-mode 1)))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
