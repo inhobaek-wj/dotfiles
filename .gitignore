@@ -42,3 +42,6 @@ eln-cache/
 
 # Projectile projects list
 projects
+projectile-frecency.eld
+
+tramp
