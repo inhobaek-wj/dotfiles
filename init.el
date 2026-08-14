@@ -631,6 +631,41 @@ Including indent-buffer, which should not be called automatically on save."
           (lambda ()
             (ibuffer-auto-mode 1)))
 
+;; 버퍼를 디렉터리별로 묶어서 보여준다.
+;; ibuffer의 `directory' 필터와 같은 기준(파일의 디렉터리, 없으면
+;; default-directory)을 써서 vterm/magit 버퍼도 같은 그룹에 들어간다.
+(defun my-ibuffer-buffer-directory (buf)
+  "Return BUF's directory: the visited file's directory, else `default-directory'.
+The result is expanded so that \"~/\" and \"/Users/me/\" group together."
+  (with-current-buffer buf
+    (let ((dir (if-let* ((filename (ibuffer-buffer-file-name))
+                         (dirname (file-name-directory filename)))
+                   dirname
+                 default-directory)))
+      (and dir (expand-file-name dir)))))
+
+(defun my-ibuffer-filter-groups-by-directory ()
+  "Return an `ibuffer-filter-groups' value with one group per directory."
+  (let (dirs)
+    (dolist (buf (buffer-list))
+      (let ((dir (my-ibuffer-buffer-directory buf)))
+        (when (and dir (not (member dir dirs)))
+          (push dir dirs))))
+    (mapcar (lambda (dir)
+              (cons (abbreviate-file-name dir)
+                    (list (cons 'predicate
+                                `(equal (my-ibuffer-buffer-directory
+                                         (current-buffer))
+                                        ,dir)))))
+            (sort dirs #'string<))))
+
+(setq ibuffer-show-empty-filter-groups nil)
+
+(add-hook 'ibuffer-hook
+          (lambda ()
+            (setq ibuffer-filter-groups (my-ibuffer-filter-groups-by-directory))
+            (ibuffer-update nil t)))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; programing related
