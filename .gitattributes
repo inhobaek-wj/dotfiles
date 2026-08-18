@@ -1,0 +1,10 @@
+# 저장소는 LF로 통일한다.
+# init.el만 예전에 CRLF로 들어가 있어서, Emacs 외의 도구로 편집하면
+# 줄바꿈만 바뀐 2000줄짜리 diff가 생기곤 했다.
+* text=auto eol=lf
+
+# 확실히 텍스트로 다뤄야 하는 것들
+*.el         text eol=lf
+*.json       text eol=lf
+*.md         text eol=lf
+.gitignore   text eol=lf
