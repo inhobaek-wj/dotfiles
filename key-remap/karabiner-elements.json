@@ -62,6 +62,59 @@
                     "type": "basic"
                 }
             ]
+        },
+        {
+            "description": "toggle macOS input source with Ctrl+Shift+Space (works inside Emacs and vterm)",
+            "manipulators": [
+                {
+                    "type": "basic",
+                    "from": {
+                        "key_code": "spacebar",
+                        "modifiers": {
+                            "mandatory": [
+                                "control",
+                                "shift"
+                            ]
+                        }
+                    },
+                    "conditions": [
+                        {
+                            "type": "input_source_if",
+                            "input_sources": [
+                                {
+                                    "language": "^ko$"
+                                }
+                            ]
+                        }
+                    ],
+                    "to": [
+                        {
+                            "select_input_source": {
+                                "input_source_id": "^com\\.apple\\.keylayout\\.ABC$"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "type": "basic",
+                    "from": {
+                        "key_code": "spacebar",
+                        "modifiers": {
+                            "mandatory": [
+                                "control",
+                                "shift"
+                            ]
+                        }
+                    },
+                    "to": [
+                        {
+                            "select_input_source": {
+                                "input_mode_id": "^com\\.apple\\.inputmethod\\.Korean\\.2SetKorean$"
+                            }
+                        }
+                    ]
+                }
+            ]
         }
     ]
 }
