@@ -21,7 +21,15 @@
                             ]
                         }
                     ],
-                    "type": "basic"
+                    "type": "basic",
+                    "conditions": [
+                        {
+                            "bundle_identifiers": [
+                                "^org\\.gnu\\.Emacs$"
+                            ],
+                            "type": "frontmost_application_unless"
+                        }
+                    ]
                 },
                 {
                     "conditions": [
