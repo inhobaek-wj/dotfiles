@@ -971,6 +971,19 @@ The result is expanded so that \"~/\" and \"/Users/me/\" group together."
   :vc (:url "https://github.com/purcell/inheritenv" :rev :newest)
   :ensure t)
 
+;; vterm-yank은 먼저 vterm-goto-char로 터미널 커서를 point에 맞추려 하는데,
+;; claude 같은 전체화면 TUI에서는 "End of buffer"로 실패해서 붙여넣기가 안 된다.
+;; bracketed paste로 문자열만 보내면 커서를 건드리지 않으므로 잘 붙는다.
+(defun my-vterm-paste ()
+  "Paste the clipboard into the terminal without moving the terminal cursor.
+`vterm-yank' calls `vterm-goto-char' first, which signals \"End of
+buffer\" inside a full-screen TUI such as Claude Code."
+  (interactive)
+  (let ((text (ignore-errors (current-kill 0))))
+    (if (or (null text) (string= text ""))
+        (message "붙여넣을 내용이 없습니다")
+      (vterm-send-string text t))))
+
 (use-package vterm
   :ensure t
   :config
@@ -978,6 +991,7 @@ The result is expanded so that \"~/\" and \"/Users/me/\" group together."
   ;; 100000은 vterm-module.h의 SB_MAX와 같은 최대값.
   ;; 터미널 생성 시점에 읽으므로 버퍼를 새로 만들어야 적용된다.
   (setq vterm-max-scrollback 100000)
+  (define-key vterm-mode-map (kbd "C-y") #'my-vterm-paste)
   (add-hook 'vterm-copy-mode-hook
             (lambda ()
               (if vterm-copy-mode
