@@ -984,6 +984,18 @@ buffer\" inside a full-screen TUI such as Claude Code."
         (message "붙여넣을 내용이 없습니다")
       (vterm-send-string text t))))
 
+;; claude 같은 전체화면 TUI에서는 vterm-reset-cursor-point가 "End of buffer"로
+;; 실패한다. 커서 위치를 맞추려는 best-effort 동작인데 예외가 터지면 호출한
+;; 쪽이 중단된다. 특히 vterm--exit-copy-mode는 이 호출 뒤에 로컬 키맵을
+;; 되돌리므로, 예외가 나면 키맵이 nil로 남아 버퍼의 모든 키가 죽는다.
+(defun my-vterm-reset-cursor-point-safely (orig-fn &rest args)
+  "Make `vterm-reset-cursor-point' best-effort instead of signalling."
+  (ignore-errors (apply orig-fn args)))
+
+(with-eval-after-load 'vterm
+  (advice-add 'vterm-reset-cursor-point :around
+              #'my-vterm-reset-cursor-point-safely))
+
 (use-package vterm
   :ensure t
   :config
@@ -996,7 +1008,12 @@ buffer\" inside a full-screen TUI such as Claude Code."
             (lambda ()
               (if vterm-copy-mode
                   (setq-local cursor-type 'box)
-                (setq-local cursor-type nil)))))
+                (setq-local cursor-type nil)
+                ;; vterm--exit-copy-mode는 로컬 키맵을 vterm-mode-map으로만
+                ;; 되돌려서 claude-code가 깔아둔 키맵(RET, C-g 등)이 사라진다.
+                (when (and (fboundp 'claude-code--term-setup-keymap)
+                           (string-prefix-p "*claude" (buffer-name)))
+                  (claude-code--term-setup-keymap 'vterm))))))
 
 (use-package monet
   :vc (:url "https://github.com/stevemolitor/monet" :rev :newest)
